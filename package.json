@@ -2,7 +2,7 @@
    "name": "elcanter-software",
    "description": "Software of restaurant based on website of same company",
    "author": "Omar Jauregui",
-   "version": "0.2.24",
+   "version": "0.2.26",
    "private": true,
    "scripts": {
       "serve": "vue-cli-service serve",
@@ -21,7 +21,7 @@
          "private": true,
          "owner": "jaureguiomar",
          "repo": "elcanter-software",
-         "token": "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"
+         "token": "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"
       }
    ],
    "repository": {
