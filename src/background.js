@@ -156,7 +156,8 @@ autoUpdater.on("error", (message) => {
 ///////////////////////////////
 // Listen for ipcMain Events //
 ipcMain.on("printer-table", async function(e, data) {
-  const device  = new escpos.USB(0x0416, 0x5011);
+  // const device  = new escpos.USB(0x0416, 0x5011);
+  const device  = new escpos.USB();
   const options = { encoding: "utf8" }
   const printer = new escpos.Printer(device, options);
   let image_path = "";
@@ -189,13 +190,28 @@ ipcMain.on("printer-table", async function(e, data) {
       log.info("#####################");
       log.info("error #1", error);
       log.info("#####################");
+      dialog.showMessageBox(win, {
+        title: "System message",
+        buttons: ["Ok"],
+        type: "info",
+        message: "Error 1: " + error,
+      });
+
       printer.size(1, 1)
       printer.align("CT")
       printer.image(image, "s8")
         .then((error) => {
+
           log.info("#####################");
           log.info("error #2", error);
           log.info("#####################");
+          dialog.showMessageBox(win, {
+            title: "System message",
+            buttons: ["Ok"],
+            type: "info",
+            message: "Error 1: " + error,
+          });
+
           printer.feed(1)
           if(fecha_result && data["hora_final"]) {
             printer.text("Fecha")
@@ -288,6 +304,12 @@ ipcMain.on("printer-table", async function(e, data) {
         log.info("#####################");
         log.info("error #3", error);
         log.info("#####################");
+        dialog.showMessageBox(win, {
+          title: "System message",
+          buttons: ["Ok"],
+          type: "info",
+          message: "Error 3: " + error,
+        });
     });
   });
 });
