@@ -190,6 +190,7 @@ ipcMain.on("printer-table", async function(e, data) {
       printer.align("CT")
       printer.image(image, "s8")
         .then(() => {
+          printer.size(0.5, 0.5)
           printer.feed(1)
           if(fecha_result && data["hora_final"]) {
             printer.text("Fecha")
@@ -315,6 +316,7 @@ ipcMain.on("printer-order", async function(e, data) {
       printer.align("CT")
       printer.image(image, "s8")
         .then(() => {
+          printer.size(0.5, 0.5)
           printer.feed(1)
           printer.text("Fecha")
           printer.text(fecha_result)
