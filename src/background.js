@@ -156,50 +156,20 @@ autoUpdater.on("error", (message) => {
 ///////////////////////////////
 // Listen for ipcMain Events //
 ipcMain.on("printer-table", async function(e, data) {
-  const device  = new escpos.USB(0x0416, 0x5011);
+  const device  = new escpos.USB(); // 0x0416, 0x5011
   const options = { encoding: "utf8" }
   const printer = new escpos.Printer(device, options);
   let image_path = "";
 
-  log.info("##########################");
-  log.info("## Before Printing Logs ##");
-  log.info("##########################");
-
   if(isDevelopment) {
     image_path = path.join(__dirname, "src/assets/img/elcanter-logo-ticket.png");
-    log.info("image_path", image_path);
-    dialog.showMessageBox(win, {
-      title: "System message",
-      buttons: ["Ok"],
-      type: "info",
-      message: "image_path: " + image_path,
-    });
   } else {
     let rootDir = app.getAppPath();
     let last = path.basename(rootDir);
     if(last == "app.asar")
         rootDir = path.dirname(app.getPath("exe"))
     image_path = path.join(rootDir, "resources/img/elcanter-logo-ticket.png");
-    log.info("rootDir", rootDir);
-    log.info("image_path", image_path);
-
-    dialog.showMessageBox(win, {
-      title: "System message",
-      buttons: ["Ok"],
-      type: "info",
-      message: "image_path: " + image_path,
-    });
-    dialog.showMessageBox(win, {
-      title: "System message",
-      buttons: ["Ok"],
-      type: "info",
-      message: "rootDir: " + rootDir,
-    });
   }
-
-  log.info("##########################");
-  log.info("##########################");
-  log.info("##########################");
 
   // Format date properly
   let fecha_final = data["fecha_final"];
