@@ -160,17 +160,17 @@ ipcMain.on("printer-table", async function(e, data) {
   const device  = new escpos.USB();
   const options = { encoding: "utf8" }
   const printer = new escpos.Printer(device, options);
-  let image_path = "";
+  // let image_path = "";
 
-  if(isDevelopment) {
-    image_path = path.join(__dirname, "src/assets/img/elcanter-logo-ticket.png");
-  } else {
-    let rootDir = app.getAppPath();
-    let last = path.basename(rootDir);
-    if(last == "app.asar")
-        rootDir = path.dirname(app.getPath("exe"))
-    image_path = path.join(rootDir, "resources/img/elcanter-logo-ticket.png");
-  }
+  // if(isDevelopment) {
+  //   image_path = path.join(__dirname, "src/assets/img/elcanter-logo-ticket.png");
+  // } else {
+  //   let rootDir = app.getAppPath();
+  //   let last = path.basename(rootDir);
+  //   if(last == "app.asar")
+  //       rootDir = path.dirname(app.getPath("exe"))
+  //   image_path = path.join(rootDir, "resources/img/elcanter-logo-ticket.png");
+  // }
 
   // Format date properly
   let fecha_final = data["fecha_final"];
@@ -185,7 +185,7 @@ ipcMain.on("printer-table", async function(e, data) {
     }
   }
 
-  escpos.Image.load(image_path, function(image) {
+  // escpos.Image.load(image_path, function(image) {
     device.open(function(error) {
       log.info("#####################");
       log.info("error #1", error);
@@ -199,8 +199,8 @@ ipcMain.on("printer-table", async function(e, data) {
 
       printer.size(1, 1)
       printer.align("CT")
-      printer.image(image, "s8")
-        .then((error) => {
+      // printer.image(image, "s8")
+      //   .then((error) => {
 
           log.info("#####################");
           log.info("error #2", error);
@@ -299,7 +299,7 @@ ipcMain.on("printer-table", async function(e, data) {
           printer.drawLine()
           printer.cut()
           printer.close()
-        });
+        // });
 
         log.info("#####################");
         log.info("error #3", error);
@@ -311,7 +311,7 @@ ipcMain.on("printer-table", async function(e, data) {
           message: "Error 3: " + error,
         });
     });
-  });
+  // });
 });
 
 ipcMain.on("printer-order", async function(e, data) {
