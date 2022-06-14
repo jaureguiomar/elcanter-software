@@ -185,11 +185,17 @@ ipcMain.on("printer-table", async function(e, data) {
   }
 
   escpos.Image.load(image_path, function(image) {
-    device.open(function() {
+    device.open(function(error) {
+      log.info("#####################");
+      log.info("error #1", error);
+      log.info("#####################");
       printer.size(1, 1)
       printer.align("CT")
       printer.image(image, "s8")
-        .then(() => {
+        .then((error) => {
+          log.info("#####################");
+          log.info("error #2", error);
+          log.info("#####################");
           printer.feed(1)
           if(fecha_result && data["hora_final"]) {
             printer.text("Fecha")
@@ -278,6 +284,10 @@ ipcMain.on("printer-table", async function(e, data) {
           printer.cut()
           printer.close()
         });
+
+        log.info("#####################");
+        log.info("error #3", error);
+        log.info("#####################");
     });
   });
 });
