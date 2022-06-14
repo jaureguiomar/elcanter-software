@@ -161,9 +161,19 @@ ipcMain.on("printer-table", async function(e, data) {
   const printer = new escpos.Printer(device, options);
   let image_path = "";
 
+  log.info("##########################");
+  log.info("## Before Printing Logs ##");
+  log.info("##########################");
+
   if(isDevelopment) {
     image_path = path.join(__dirname, "src/assets/img/elcanter-logo-ticket.png");
-  log.info("image_path", image_path);
+    log.info("image_path", image_path);
+    dialog.showMessageBox(win, {
+      title: "System message",
+      buttons: ["Ok"],
+      type: "info",
+      message: "image_path: " + image_path,
+    });
   } else {
     let rootDir = app.getAppPath();
     let last = path.basename(rootDir);
@@ -183,15 +193,13 @@ ipcMain.on("printer-table", async function(e, data) {
       title: "System message",
       buttons: ["Ok"],
       type: "info",
-      message: "image_path: " + image_path,
-    });
-    dialog.showMessageBox(win, {
-      title: "System message",
-      buttons: ["Ok"],
-      type: "info",
       message: "rootDir: " + rootDir,
     });
   }
+
+  log.info("##########################");
+  log.info("##########################");
+  log.info("##########################");
 
   // Format date properly
   let fecha_final = data["fecha_final"];
