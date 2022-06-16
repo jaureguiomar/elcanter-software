@@ -9,17 +9,9 @@
                      <template #title>
                         <div class="content-title-content">
                             <div class="content-title-left">
-                                <h4>Pedidos</h4>
+                                <h4>Ventas</h4>
                             </div>
                             <div class="content-title-right">
-                                <button
-                                    @click="onNewOrderClick"
-                                    class="btn btn-custom mr-2">
-                                    <a>
-                                        <font-awesome-icon icon="fa-solid fa-plus" />
-                                        Nuevo pedido
-                                    </a>
-                                </button>
                                 <button
                                  @click="onDownloadCSV"
                                  class="btn btn-custom">
@@ -61,7 +53,7 @@
                                        <button class="btn btn-custom-white">
                                           <a href="#">
                                              <i class="fa fa-search" aria-hidden="true"></i>
-                                             Buscar pedido
+                                             Buscar venta
                                           </a>
                                        </button>
                                        </div>
@@ -108,7 +100,7 @@
                                           </b-row>
 
                                           <b-table
-                                             :items="data.order"
+                                             :items="data.sale"
                                              :fields="table.fields"
                                              :current-page="table.currentPage"
                                              :per-page="table.perPage"
@@ -126,7 +118,7 @@
                                              selectable
                                              ref="selectableTable"
                                              :select-mode="'single'"
-                                             @row-selected="onOrderRowClick"
+                                             @row-selected="onSaleRowClick"
                                           >
                                              <template #cell(name)="row">
                                                 {{ row.value.first }} {{ row.value.last }}
@@ -193,20 +185,16 @@
                   <RightContentElem>
                      <template #content>
                         <EmptyOkContainerElem
-                           v-if="table.selected <= 0 && !data.new_order"
-                        />
-                        <FormContainerElem
-                           @addOrder="addOrder"
-                           v-if="table.selected <= 0 && data.new_order"
+                           v-if="table.selected <= 0 && !data.new_sale"
                         />
                         <TotalContainerElem
-                           v-if="table.selected > 0 && !data.new_order"
-                           :data="data.curr_order"
-                           type="order"
-                           @updateOrder="updateOrder"
-                           @updateOrderField="updateOrderField"
-                           @updateOrderComandaField="updateOrderComandaField"
-                           @removeOrderComanda="removeOrderComanda"
+                           v-if="table.selected > 0 && !data.new_sale"
+                           :data="data.curr_sale"
+                           type="table"
+                           @updateOrder="updateSale"
+                           @updateOrderField="updateSaleField"
+                           @updateOrderComandaField="updateSaleComandaField"
+                           @removeOrderComanda="removeSaleComanda"
                         />
                      </template>
                   </RightContentElem>
@@ -225,7 +213,6 @@ import compFooter from "@/views/layout/Footer.vue";
 import compLeftContent from "@/views/layout/LeftContent.vue";
 import compRightContent from "@/views/layout/RightContent.vue";
 import compEmptyOkContainer from "@/views/components/shared/EmptyOkContainer.vue";
-import compFormContainer from "@/views/components/order/FormContainer.vue";
 import compTotalContainer from "@/views/components/shared/TotalContainer.vue";
 
 export default {
@@ -235,21 +222,20 @@ export default {
       LeftContentElem: compLeftContent,
       RightContentElem: compRightContent,
       EmptyOkContainerElem: compEmptyOkContainer,
-      FormContainerElem: compFormContainer,
       TotalContainerElem: compTotalContainer
    },
    data() {
       return {
          data: {
-            order: [],
-            curr_order: {},
-            curr_order_index: -1,
-            new_order: false
+            sale: [],
+            curr_sale: {},
+            curr_sale_index: -1,
+            new_sale: false
          },
          table: {
             selected: -1,
             fields: [
-               { key: "idpedido", label: "No. de Pedido", sortable: true, sortDirection: "desc", class: "text-center" },
+               { key: "idventa", label: "No. de Venta", sortable: true, sortDirection: "desc", class: "text-center" },
                {
                   key: "mesero",
                   label: "Mesero",
@@ -281,7 +267,7 @@ export default {
                5, 10, 15,
                { value: 100, text: "Mostrar todo" }
             ],
-            sortBy: "idpedido",
+            sortBy: "idventa",
             sortDesc: true,
             sortDirection: "desc",
             filter: null,
@@ -291,20 +277,20 @@ export default {
    },
    created() {
       const vue_this = this;
-      Vue.prototype.$http.get("Rutes/venta_pedidos")
+      Vue.prototype.$http.get("Rutes/venta_ventas")
          .then(function (response) {
             if(response) {
                const data = response.data;
-               vue_this.data.order = data;
-               vue_this.table.totalRows = vue_this.data.order.length;
+               vue_this.data.sale = data;
+               vue_this.table.totalRows = vue_this.data.sale.length;
             } else {
                alert("Ha ocurrido un error inesperado. Por favor, intenta de nuevo.");
             }
          });
    },
    methods: {
-      onNewOrderClick() {
-         this.data.new_order = true;
+      onNewSaleClick() {
+         this.data.new_sale = true;
          this.table.selected = -1;
       },
       onDownloadCSV() {
@@ -312,71 +298,68 @@ export default {
          let file_data = "";
 
          file_date = this.getFileDate();
-         file_data = "Id Pedido, Id Mesero, Mesero, Estatus, Total, Hora Inicio, Hora Final\n";
+         file_data = "Id Venta, Id Mesero, Mesero, Estatus, Total, Hora Inicio, Hora Final\n";
 
-         for(let i = 0; i < this.data.order.length; i++) {
-            const curr_order = this.data.order[i];
-            file_data += `${ curr_order.idpedido }, ${ curr_order.idmesero }, ${ curr_order.mesero.nombre + ' ' + curr_order.mesero.apellidos }, ${ curr_order.status }, $${ curr_order.total }, ${ curr_order.hora_inicio }, ${ (curr_order.hora_final) ? curr_order.hora_final : "" }`;
-            if(i <= this.data.order.length)
+         for(let i = 0; i < this.data.sale.length; i++) {
+            const curr_sale = this.data.sale[i];
+            file_data += `${ curr_sale.idventa }, ${ curr_sale.idmesero }, ${ curr_sale.mesero.nombre + ' ' + curr_sale.mesero.apellidos }, ${ curr_sale.status }, $${ curr_sale.total }, ${ curr_sale.hora_inicio }, ${ (curr_sale.hora_final) ? curr_sale.hora_final : "" }`;
+            if(i <= this.data.sale.length)
                file_data += "\n";
          }
 
          const anchor = document.createElement("a");
          anchor.href = "data:text/csv;charset=utf-8," + encodeURIComponent(file_data);
          anchor.target = "_blank";
-         anchor.download = "pedidos-reporte" + file_date + ".csv";
+         anchor.download = "ventas-reporte" + file_date + ".csv";
          anchor.click();
          anchor.remove();
       },
-      onOrderRowClick(selected_order) {
-         // if(this.table.selected == selected_order.idpedido)
+      onSaleRowClick(selected_sale) {
+         // if(this.table.selected == selected_sale.idventa)
          //    return;
 
-         if(selected_order.length > 0) {
+         if(selected_sale.length > 0) {
             let index = -1;
-            selected_order = selected_order[0];
+            selected_sale = selected_sale[0];
 
-            for(let i = 0; i < this.data.order.length; i++) {
-               const curr_oder = this.data.order[i];
-               if(selected_order.idpedido == curr_oder.idpedido) {
+            for(let i = 0; i < this.data.sale.length; i++) {
+               const curr_oder = this.data.sale[i];
+               if(selected_sale.idventa == curr_oder.idventa) {
                   index = i;
                   break;
                }
             }
 
-            this.data.new_order = false;
-            this.table.selected = selected_order.idpedido;
+            this.data.new_sale = false;
+            this.table.selected = selected_sale.idventa;
 
             const vue_this = this;
-            Vue.prototype.$http.post("Pedidos/get_by_id/" + this.table.selected)
+            Vue.prototype.$http.post("Ventas/get_by_id/" + this.table.selected)
                .then(function (response) {
                   if(response) {
                      const data = response.data;
-                     vue_this.data.curr_order = data;
-                     vue_this.data.curr_order_index = index;
+                     vue_this.data.curr_sale = data;
+                     vue_this.data.curr_sale_index = index;
                   } else {
                      alert("Ha ocurrido un error inesperado. Por favor, intenta de nuevo.");
                   }
                });
          } else {
-            this.data.new_order = false;
+            this.data.new_sale = false;
             this.table.selected = -1;
          }
       },
-      addOrder(new_order) {
-         this.data.order.push(new_order);
+      updateSale(fresh_sale) {
+         this.data.curr_sale = fresh_sale;
       },
-      updateOrder(fresh_order) {
-         this.data.curr_order = fresh_order;
+      updateSaleField(value) {
+         this.data.sale[this.data.curr_sale_index][value.field] = value.value;
       },
-      updateOrderField(value) {
-         this.data.order[this.data.curr_order_index][value.field] = value.value;
+      updateSaleComandaField(value) {
+         this.data.curr_sale.comanda[value.index][value.field] = value.value;
       },
-      updateOrderComandaField(value) {
-         this.data.curr_order.comanda[value.index][value.field] = value.value;
-      },
-      removeOrderComanda(index) {
-         this.data.curr_order.comanda.splice(index, 1);
+      removeSaleComanda(index) {
+         this.data.curr_sale.comanda.splice(index, 1);
       },
       onFiltered(filteredItems) {
         this.table.totalRows = filteredItems.length;
