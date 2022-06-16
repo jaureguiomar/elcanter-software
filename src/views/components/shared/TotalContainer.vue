@@ -221,19 +221,19 @@
                                            </select>
                                        </div>
                                        <div class="col-sm-6">
-                                           <input v-model="close_order_modal.how_many" @blur="onHowManyInputBlur" type="text" class="form-control form-control-sm">
+                                           <input v-model="close_order_modal.how_many" @keypress="onHowManyInputKeypress" @blur="onHowManyInputBlur" type="text" class="form-control form-control-sm">
                                        </div>
                                    </div>
                               </div>
                            </div>
-                           <!-- <div class="row pt-5">
+                           <div class="row pt-5">
                               <div class="col-md-6">
                                    <label>VUELTO</label>
                               </div>
                               <div class="col-md-6 text-right">
-                                   <label id="vuelto">$ 00.00</label>
+                                   <label>${{ close_order_modal.change }}</label>
                               </div>
-                           </div> -->
+                           </div>
                        </div>
                    </div>
                </div>
@@ -581,11 +581,32 @@ export default {
       onReprintOrderClick() {
          this.printData(this.data);
       },
+      calculateHowMany() {
+         this.close_order_modal.how_many = parseFloat(this.close_order_modal.how_many).toFixed(2);
+         if(isNaN(this.close_order_modal.how_many))
+            this.close_order_modal.how_many = "0.00";
+      },
+      calculateChange() {
+         let total = parseFloat(this.orderTotal);
+         let how_many = parseFloat(this.close_order_modal.how_many);
+         let change = parseFloat(how_many - total).toFixed(2);
+         this.close_order_modal.change = change;
+         let error_change = false;
+
+         if(how_many < total)
+            error_change = true;
+         return error_change;
+      },
       closeOrderModal() {
          const vue_this = this;
          const type_source_path = this.getTypeSourcePath();
          let type_source_endpoint = "";
          let params = {};
+
+         if(this.calculateChange()) {
+            alert("El monto de pago debe ser mayor o igual al total");
+            return;
+         }
 
          if(type_source_path == "Ventas")
             type_source_endpoint = "termina_mesa";
@@ -665,10 +686,15 @@ export default {
       hideCloseOrderModal() {
          this.$refs["close-order-modal"].hide();
       },
+      onHowManyInputKeypress(e) {
+         if(e.keyCode === 13) {
+            this.calculateHowMany();
+            this.calculateChange();
+         }
+      },
       onHowManyInputBlur() {
-         this.close_order_modal.how_many = parseFloat(this.close_order_modal.how_many).toFixed(2);
-         if(isNaN(this.close_order_modal.how_many))
-            this.close_order_modal.how_many = "0.00";
+         this.calculateHowMany();
+         this.calculateChange();
       },
       showOrderAddProducsModal() {
          this.order_add_products_modal.product_selected = [];
