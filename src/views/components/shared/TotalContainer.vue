@@ -579,10 +579,7 @@ export default {
          this.$refs["close-order-modal"].show();
       },
       onReprintOrderClick() {
-         if(this.type == "table")
-            window.api.send("printer-table", this.data);
-         else
-            window.api.send("printer-order", this.data);
+         this.printData(this.data);
       },
       closeOrderModal() {
          const vue_this = this;
@@ -654,6 +651,7 @@ export default {
                      });
                   }
 
+                  vue_this.printData(vue_this.data);
                   vue_this.closed = true;
                   vue_this.hideCloseOrderModal();
                } else {
@@ -830,6 +828,7 @@ export default {
                return;
             }
 
+            this.printData(data);
             this.$emit("updateOrder", data);
             this.$refs["order-add-products-modal"].hide();
          } else {
@@ -855,6 +854,12 @@ export default {
          else
             source_url = "ComandasPedidos";
          return source_url;
+      },
+      printData(data) {
+         if(this.type == "table")
+            window.api.send("printer-table", data);
+         else
+            window.api.send("printer-order", data);
       }
    },
    computed: {
