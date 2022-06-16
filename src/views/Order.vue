@@ -262,7 +262,17 @@ export default {
                   }
                },
                { key: "status", label: "Status", sortable: true, class: "text-center" },
-               { key: "total", label: "Total", sortable: false, class: "text-center" }
+               {
+                  key: "total",
+                  label: "Total",
+                  sortable: false,
+                  sortByFormatted: true,
+                  filterByFormatted: true,
+                  class: "text-center",
+                  formatter: (total) => {
+                     return "$" + total;
+                  }
+               }
             ],
             totalRows: 1,
             currentPage: 1,
