@@ -21,8 +21,6 @@ module.exports = defineConfig({
             releaseType: "draft"
           }
         ],
-        // productName: "Elcanterero restaurante",
-        // appId: "com.elcanterero.restaurante.app",
         win: {
           "target": [
               "nsis"
