@@ -2,7 +2,7 @@
    <div class="footer-container">
       <div class="footer-container-margin">
          <div class="footer-container-content">
-            <h4>Elcanterero Restaurante 2022 v0.2.34</h4>
+            <h4>Elcanterero Restaurante 2022 v0.2.35</h4>
          </div>
       </div>
    </div>
