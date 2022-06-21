@@ -49,7 +49,11 @@ export default {
    methods: {
       async onAbrirPedidoClick() {
          if(!this.idmesero) {
-            alert("Debe haber ingresado el id del mesero");
+            this.$fire({
+               title: "Error",
+               text: "Debe haber ingresado el id del mesero",
+               type: "error"
+            });
             return;
          }
 
@@ -72,11 +76,19 @@ export default {
             if(data != 0) {
                id_order = data;
             } else {
-               alert("Ha ocurrido un error inesperado. Por favor, intenta de nuevo.");
+               this.$fire({
+                  title: "Error",
+                  text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+                  type: "error"
+               });
                return;
             }
          } else {
-            alert("Ha ocurrido un error inesperado. Por favor, intenta de nuevo.");
+            this.$fire({
+               title: "Error",
+               text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+               type: "error"
+            });
             return;
          }
 
@@ -94,11 +106,19 @@ export default {
             if(data) {
                new_order = data;
             } else {
-               alert("Ha ocurrido un error inesperado. Por favor, intenta de nuevo.");
+               this.$fire({
+                  title: "Error",
+                  text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+                  type: "error"
+               });
                return;
             }
          } else {
-            alert("Ha ocurrido un error inesperado. Por favor, intenta de nuevo.");
+            this.$fire({
+               title: "Error",
+               text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+               type: "error"
+            });
             return;
          }
 

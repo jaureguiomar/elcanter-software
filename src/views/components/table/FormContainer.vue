@@ -75,11 +75,19 @@ export default {
          this.personas = 0;
 
         if(this.personas <= 0) {
-           alert("Debe haber ingresado cantidad de personas");
+           this.$fire({
+               title: "Error",
+               text: "Debe haber ingresado cantidad de personas",
+               type: "error"
+            });
            return;
         }
         if(!this.idmesero) {
-           alert("Debe haber ingresado el id del mesero");
+           this.$fire({
+               title: "Error",
+               text: "Debe haber ingresado el id del mesero",
+               type: "error"
+            });
            return;
         }
 
@@ -104,11 +112,19 @@ export default {
            if(data != 0) {
               id_sale = data;
            } else {
-              alert("Ha ocurrido un error inesperado. Por favor, intenta de nuevo.");
+              this.$fire({
+                  title: "Error",
+                  text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+                  type: "error"
+               });
               return;
            }
         } else {
-           alert("Ha ocurrido un error inesperado. Por favor, intenta de nuevo.");
+           this.$fire({
+               title: "Error",
+               text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+               type: "error"
+            });
            return;
         }
 
@@ -126,11 +142,19 @@ export default {
            if(data) {
              sale_data = data;
            } else {
-              alert("Ha ocurrido un error inesperado. Por favor, intenta de nuevo.");
+              this.$fire({
+                  title: "Error",
+                  text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+                  type: "error"
+               });
               return;
            }
         } else {
-           alert("Ha ocurrido un error inesperado. Por favor, intenta de nuevo.");
+           this.$fire({
+               title: "Error",
+               text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+               type: "error"
+            });
            return;
         }
 

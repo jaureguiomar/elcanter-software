@@ -10,6 +10,7 @@ import "@/plugins/filters";
 import "@/plugins/directives";
 import "@/plugins/bootstrap";
 import "@/plugins/font-awesome";
+import "@/plugins/simple-alert";
 // Global Template styles
 import "@/assets/scss/styles.scss";
 

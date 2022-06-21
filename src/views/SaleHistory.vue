@@ -175,7 +175,11 @@ export default {
                vue_this.data.sale = data.ventas_historial;
                vue_this.data.order = data.pedidos_historial;
             } else {
-               alert("Ha ocurrido un error inesperado. Por favor, intenta de nuevo.");
+               this.$fire({
+                  title: "Error",
+                  text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+                  type: "error"
+               });
             }
          });
    }

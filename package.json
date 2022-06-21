@@ -2,7 +2,7 @@
    "name": "elcanter-software",
    "description": "Software of restaurant based on website of same company",
    "author": "Omar Jauregui",
-   "version": "0.2.39",
+   "version": "0.2.40",
    "private": true,
    "scripts": {
       "serve": "vue-cli-service serve",
@@ -47,6 +47,7 @@
       "vue": "^2.6.14",
       "vue-i18n": "^8.22.1",
       "vue-router": "^3.4.6",
+      "vue-simple-alert": "^1.1.1",
       "vuex": "^3.5.1",
       "webpack": "^5.73.0"
    },

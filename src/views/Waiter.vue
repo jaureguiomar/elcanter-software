@@ -218,7 +218,11 @@ export default {
          const num = this.form.num;
 
          if(!date || !num) {
-            alert("Debe ingresar los datos para consultar informacion");
+            this.$fire({
+               title: "Error",
+               text: "Debe ingresar los datos para consultar informacion",
+               type: "error"
+            });
             return;
          }
 
@@ -242,7 +246,11 @@ export default {
                   vue_this.data.sale_total = vue_this.calculateSaleTotal();
                   vue_this.data.order_total = vue_this.calculateOrderTotal();
                } else {
-                  alert("Ha ocurrido un error inesperado. Por favor, intenta de nuevo.");
+                  this.$fire({
+                     title: "Error",
+                     text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+                     type: "error"
+                  });
                }
             });
       },

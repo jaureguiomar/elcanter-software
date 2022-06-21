@@ -276,7 +276,11 @@ export default {
                vue_this.data.table.status.patio.patio2.push(vue_this.data.table.status.patio.patio[3]);
                vue_this.data.table.status.patio.patio2.push(vue_this.data.table.status.patio.patio[4]);
             } else {
-               alert("Ha ocurrido un error inesperado. Por favor, intenta de nuevo.");
+               this.$fire({
+                  title: "Error",
+                  text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+                  type: "error"
+               });
             }
          });
    },

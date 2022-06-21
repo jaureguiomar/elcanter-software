@@ -473,10 +473,18 @@ export default {
                      });
                      vue_this.comanda_price[index].subtotal = new_subtotal;
                   } else {
-                     alert("Ha ocurrido un error inesperado. Por favor, intenta de nuevo.");
+                     this.$fire({
+                        title: "Error",
+                        text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+                        type: "error"
+                     });
                   }
                } else {
-                  alert("Ha ocurrido un error inesperado. Por favor, intenta de nuevo.");
+                  this.$fire({
+                     title: "Error",
+                     text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+                     type: "error"
+                  });
                }
             });
       },
@@ -510,10 +518,18 @@ export default {
                            value: curr_comanda_price.subtotal_modificado
                         });
                      } else {
-                        alert("Ha ocurrido un error inesperado. Por favor, intenta de nuevo.");
+                        this.$fire({
+                           title: "Error",
+                           text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+                           type: "error"
+                        });
                      }
                   } else {
-                     alert("Ha ocurrido un error inesperado. Por favor, intenta de nuevo.");
+                     this.$fire({
+                        title: "Error",
+                        text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+                        type: "error"
+                     });
                   }
                });
          }
@@ -559,10 +575,18 @@ export default {
                   vue_this.hideAuthModal();
                   vue_this.auth_modal.curr_index = -1;
                } else {
-                  alert("Usuario y/o contrase;a incorrecto");
+                  this.$fire({
+                     title: "Error",
+                     text: "Usuario y/o contrase;a incorrecto",
+                     type: "error"
+                  });
                }
             } else {
-               alert("Ha ocurrido un error inesperado. Por favor, intenta de nuevo.");
+               this.$fire({
+                  title: "Error",
+                  text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+                  type: "error"
+               });
             }
          });
       },
@@ -604,7 +628,11 @@ export default {
          let params = {};
 
          if(this.calculateChange()) {
-            alert("El monto de pago debe ser mayor o igual al total");
+            this.$fire({
+               title: "Error",
+               text: "El monto de pago debe ser mayor o igual al total",
+               type: "error"
+            });
             return;
          }
 
@@ -676,10 +704,18 @@ export default {
                   vue_this.closed = true;
                   vue_this.hideCloseOrderModal();
                } else {
-                  alert("Usuario y/o contrase;a incorrecto");
+                  this.$fire({
+                     title: "Error",
+                     text: "Usuario y/o contrase;a incorrecto",
+                     type: "error"
+                  });
                }
             } else {
-               alert("Ha ocurrido un error inesperado. Por favor, intenta de nuevo.");
+               this.$fire({
+                  title: "Error",
+                  text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+                  type: "error"
+               });
             }
          });
       },
@@ -716,7 +752,11 @@ export default {
                vue_this.order_add_products_modal.product = data;
                vue_this.$refs["order-add-products-modal"].show();
             } else {
-               alert("Ha ocurrido un error inesperado. Por favor, intenta de nuevo.");
+               this.$fire({
+                  title: "Error",
+                  text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+                  type: "error"
+               });
             }
          });
       },
@@ -735,7 +775,11 @@ export default {
          }
 
          if(!finded) {
-            alert("El producto ingresado es incorrecto");
+            this.$fire({
+               title: "Error",
+               text: "El producto ingresado es incorrecto",
+               type: "error"
+            });
             return;
          }
 
@@ -750,7 +794,11 @@ export default {
          }
          if(finded) {
             this.order_add_products_modal.product_search = "";
-            alert("El producto ya fue agregado al pedido");
+            this.$fire({
+               title: "Error",
+               text: "El producto ya fue agregado al pedido",
+               type: "error"
+            });
             return;
          }
 
@@ -766,7 +814,11 @@ export default {
          }
          if(finded) {
             this.order_add_products_modal.product_search = "";
-            alert("El producto ya fue agregado al pedido");
+            this.$fire({
+               title: "Error",
+               text: "El producto ya fue agregado al pedido",
+               type: "error"
+            });
             return;
          }
 
@@ -808,7 +860,11 @@ export default {
       },
       async addOrderAddProductsModal() {
          if(this.order_add_products_modal.product_selected.length <= 0) {
-            alert("La comanda al menos debe de tener almenos un producto");
+            this.$fire({
+               title: "Error",
+               text: "La comanda al menos debe de tener almenos un producto",
+               type: "error"
+            });
             return;
          }
 
@@ -829,11 +885,19 @@ export default {
          if(response) {
             const data = response.data;
             if(!data) {
-               alert("Ha ocurrido un error inesperado. Por favor, intenta de nuevo.");
+               this.$fire({
+                  title: "Error",
+                  text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+                  type: "error"
+               });
                return;
             }
          } else {
-            alert("Ha ocurrido un error inesperado. Por favor, intenta de nuevo.");
+            this.$fire({
+               title: "Error",
+               text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+               type: "error"
+            });
             return;
          }
 
@@ -850,7 +914,11 @@ export default {
          if(response) {
             const data = response.data;
             if(!data) {
-               alert("Ha ocurrido un error inesperado. Por favor, intenta de nuevo.");
+               this.$fire({
+                  title: "Error",
+                  text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+                  type: "error"
+               });
                return;
             }
 
@@ -858,7 +926,11 @@ export default {
             this.$emit("updateOrder", data);
             this.$refs["order-add-products-modal"].hide();
          } else {
-            alert("Ha ocurrido un error inesperado. Por favor, intenta de nuevo.");
+            this.$fire({
+               title: "Error",
+               text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+               type: "error"
+            });
             return;
          }
       },

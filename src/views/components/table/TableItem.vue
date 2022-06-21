@@ -97,11 +97,19 @@ export default {
                   if(data) {
                     this.$emit("updateCurrSaleItem", data);
                   } else {
-                     alert("Ha ocurrido un error inesperado. Por favor, intenta de nuevo.");
+                     this.$fire({
+                        title: "Error",
+                        text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+                        type: "error"
+                     });
                      return;
                   }
                } else {
-                  alert("Ha ocurrido un error inesperado. Por favor, intenta de nuevo.");
+                  this.$fire({
+                     title: "Error",
+                     text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+                     type: "error"
+                  });
                   return;
                }
             } else {

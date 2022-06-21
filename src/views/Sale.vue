@@ -284,7 +284,11 @@ export default {
                vue_this.data.sale = data;
                vue_this.table.totalRows = vue_this.data.sale.length;
             } else {
-               alert("Ha ocurrido un error inesperado. Por favor, intenta de nuevo.");
+               this.$fire({
+                  title: "Error",
+                  text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+                  type: "error"
+               });
             }
          });
    },
@@ -341,7 +345,11 @@ export default {
                      vue_this.data.curr_sale = data;
                      vue_this.data.curr_sale_index = index;
                   } else {
-                     alert("Ha ocurrido un error inesperado. Por favor, intenta de nuevo.");
+                     this.$fire({
+                        title: "Error",
+                        text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+                        type: "error"
+                     });
                   }
                });
          } else {
