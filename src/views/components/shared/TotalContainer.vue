@@ -579,7 +579,7 @@ export default {
          this.$refs["close-order-modal"].show();
       },
       onReprintOrderClick() {
-         this.printData(this.data);
+         this.printProductsData(this.data);
       },
       calculateHowMany() {
          this.close_order_modal.how_many = parseFloat(this.close_order_modal.how_many).toFixed(2);
@@ -883,9 +883,15 @@ export default {
       },
       printData(data) {
          if(this.type == "table")
-            window.api.send("printer-table", data);
+            window.api.send("print-table", data);
          else
-            window.api.send("printer-order", data);
+            window.api.send("print-order", data);
+      },
+      printProductsData(data) {
+         if(this.type == "table")
+            window.api.send("print-products-table", data);
+         else
+            window.api.send("print-products-order", data);
       }
    },
    computed: {

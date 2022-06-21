@@ -155,7 +155,7 @@ autoUpdater.on("error", (message) => {
 
 ///////////////////////////////
 // Listen for ipcMain Events //
-ipcMain.on("printer-table", async function(e, data) {
+ipcMain.on("print-table", async function(e, data) {
   let image_path = "";
   if(isDevelopment) {
     image_path = path.join(__dirname, "src/assets/img/elcanter-logo-ticket.png");
@@ -418,7 +418,7 @@ ipcMain.on("printer-table", async function(e, data) {
   }
 });
 
-ipcMain.on("printer-order", async function(e, data) {
+ipcMain.on("print-order", async function(e, data) {
   let image_path = "";
   if(isDevelopment) {
     image_path = path.join(__dirname, "src/assets/img/elcanter-logo-ticket.png");
@@ -663,6 +663,211 @@ ipcMain.on("printer-order", async function(e, data) {
             printer.close()
           });
       });
+    });
+  }
+});
+ipcMain.on("print-products-table", async function(e, data) {
+  // Format date properly
+  let fecha_final = data["fecha_final"];
+  let fecha_result = fecha_final;
+  if(fecha_final) {
+    let splitted_fecha_final = fecha_final.split("-");
+    if(splitted_fecha_final.length == 3) {
+      let year = splitted_fecha_final[0];
+      let month = splitted_fecha_final[1];
+      let day = splitted_fecha_final[2];
+      fecha_result = day + "/" + month + "/" + year;
+    }
+  }
+
+  // Split comanda data by category
+  let comanda_products = [];
+  let comanda_drinks = [];
+  for(let i = 0; i < data["comanda"].length; i++) {
+      const curr_comanda = data["comanda"][i];
+      const curr_producto = curr_comanda["producto"];
+      const curr_categoria = curr_producto["categoria"];
+      if(curr_categoria["lugar"] == "c")
+        comanda_products.push(curr_comanda);
+      else if(curr_categoria["lugar"] == "b")
+        comanda_drinks.push(curr_comanda);
+  }
+
+  // Print "products"
+  if(comanda_products.length > 0) {
+    const device  = new escpos.USB(); // 0x0416, 0x5011
+    const options = { encoding: "utf8" }
+    const printer = new escpos.Printer(device, options);
+
+    device.open(function() {
+      printer.size(0.5, 0.5);
+      printer.align("CT");
+      if(fecha_result && data["hora_final"]) {
+        printer.text("Fecha");
+        printer.text(fecha_result);
+        printer.text(data["hora_final"]);
+        printer.feed(1);
+      }
+      printer.text("Mesero");
+      printer.text(data["mesero"]["nombre"] + " " + data["mesero"]["apellidos"]);
+      printer.feed(1);
+      printer.text("No de mesa");
+      printer.text("#" + data["mesa"]["nomesa"]);
+      printer.feed(1);
+      printer.drawLine();
+      printer.feed(1);
+      printer.align("CT");
+      printer.text("Cant-Desc");
+      printer.text("----------");
+      printer.align("LT");
+      for(let i = 0; i < comanda_products.length; i++) {
+        const curr_comanda = comanda_products[i];
+        printer.text(
+          curr_comanda["cantidad"] + ".- " + curr_comanda["producto"]["producto"] + ((curr_comanda["comentario"]) ? " (" + curr_comanda["comentario"] + ")" : "")
+        );
+        printer.feed(1);
+      }
+      printer.cut();
+      printer.close();
+    });
+  }
+
+  // Print "drinks"
+  if(comanda_drinks.length > 0) {
+    const device  = new escpos.USB(); // 0x0416, 0x5011
+    const options = { encoding: "utf8" }
+    const printer = new escpos.Printer(device, options);
+
+    device.open(function() {
+      printer.size(0.5, 0.5);
+      printer.align("CT");
+      if(fecha_result && data["hora_final"]) {
+        printer.text("Fecha");
+        printer.text(fecha_result);
+        printer.text(data["hora_final"]);
+        printer.feed(1);
+      }
+      printer.text("Mesero");
+      printer.text(data["mesero"]["nombre"] + " " + data["mesero"]["apellidos"]);
+      printer.feed(1);
+      printer.text("No de mesa");
+      printer.text("#" + data["mesa"]["nomesa"]);
+      printer.feed(1);
+      printer.drawLine();
+      printer.feed(1);
+      printer.align("CT");
+      printer.text("Cant-Desc");
+      printer.text("----------");
+      printer.align("LT");
+      for(let i = 0; i < comanda_drinks.length; i++) {
+        const curr_comanda = comanda_drinks[i];
+        printer.text(
+          curr_comanda["cantidad"] + ".- " + curr_comanda["producto"]["producto"] + ((curr_comanda["comentario"]) ? " (" + curr_comanda["comentario"] + ")" : "")
+        );
+        printer.feed(1);
+      }
+      printer.cut();
+      printer.close();
+    });
+  }
+});
+
+ipcMain.on("print-products-order", async function(e, data) {
+  // Format date properly
+  let fecha_final = data["fecha_final"];
+  let splitted_fecha_final = fecha_final.split("-");
+  let fecha_result = fecha_final;
+  if(splitted_fecha_final.length == 3) {
+    let year = splitted_fecha_final[0];
+    let month = splitted_fecha_final[1];
+    let day = splitted_fecha_final[2];
+    fecha_result = day + "/" + month + "/" + year;
+  }
+
+  // Split comanda data by category
+  let comanda_products = [];
+  let comanda_drinks = [];
+  for(let i = 0; i < data["comanda"].length; i++) {
+      const curr_comanda = data["comanda"][i];
+      const curr_producto = curr_comanda["producto"];
+      const curr_categoria = curr_producto["categoria"];
+      if(curr_categoria["lugar"] == "c")
+        comanda_products.push(curr_comanda);
+      else if(curr_categoria["lugar"] == "b")
+        comanda_drinks.push(curr_comanda);
+  }
+
+  // Print "products"
+  if(comanda_products.length > 0) {
+    const device  = new escpos.USB(); // 0x0416, 0x5011
+    const options = { encoding: "utf8" }
+    const printer = new escpos.Printer(device, options);
+
+    device.open(function() {
+      printer.size(0.5, 0.5);
+      printer.align("CT");
+      printer.text("Fecha");
+      printer.text(fecha_result);
+      printer.text(data["hora_final"]);
+      printer.feed(1);
+      printer.text("Mesero");
+      printer.text(data["mesero"]["nombre"] + " " + data["mesero"]["apellidos"]);
+      printer.feed(1);
+      printer.text("Id del pedido");
+      printer.text("#" + data["idpedido"]);
+      printer.feed(1);
+      printer.drawLine();
+      printer.feed(1);
+      printer.align("CT");
+      printer.text("Cant-Desc");
+      printer.text("----------");
+      printer.align("LT");
+      for(let i = 0; i < comanda_products.length; i++) {
+        const curr_comanda = comanda_products[i];
+        printer.text(
+          curr_comanda["cantidad"] + ".- " + curr_comanda["producto"]["producto"] + ((curr_comanda["comentario"]) ? " (" + curr_comanda["comentario"] + ")" : "")
+        );
+        printer.feed(1);
+      }
+      printer.cut();
+      printer.close();
+    });
+  }
+
+  // Print "drinks"
+  if(comanda_drinks.length > 0) {
+    const device  = new escpos.USB(); // 0x0416, 0x5011
+    const options = { encoding: "utf8" }
+    const printer = new escpos.Printer(device, options);
+
+    device.open(function() {
+      printer.size(0.5, 0.5);
+      printer.align("CT");
+      printer.text("Fecha");
+      printer.text(fecha_result);
+      printer.text(data["hora_final"]);
+      printer.feed(1);
+      printer.text("Mesero");
+      printer.text(data["mesero"]["nombre"] + " " + data["mesero"]["apellidos"]);
+      printer.feed(1);
+      printer.text("Id del pedido");
+      printer.text("#" + data["idpedido"]);
+      printer.feed(1);
+      printer.drawLine();
+      printer.feed(1);
+      printer.align("CT");
+      printer.text("Cant-Desc");
+      printer.text("----------");
+      printer.align("LT");
+      for(let i = 0; i < comanda_drinks.length; i++) {
+        const curr_comanda = comanda_drinks[i];
+        printer.text(
+          curr_comanda["cantidad"] + ".- " + curr_comanda["producto"]["producto"] + ((curr_comanda["comentario"]) ? " (" + curr_comanda["comentario"] + ")" : "")
+        );
+        printer.feed(1);
+      }
+      printer.cut();
+      printer.close();
     });
   }
 });

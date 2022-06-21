@@ -2,12 +2,15 @@ const { contextBridge, ipcRenderer } = require("electron");
 contextBridge.exposeInMainWorld(
   "api", {
     send: (channel, data) => {
-      let validChannels = ["printer-table", "printer-order"]; // "async-message"
+      let validChannels = [
+        "print-table", "print-order",
+        "print-products-table", "print-products-order"
+      ];
       if(validChannels.includes(channel))
         ipcRenderer.send(channel, data);
     },
     receive: (channel, func) => {
-      let validChannels = []; // "async-message-reply"
+      let validChannels = [];
       if(validChannels.includes(channel))
         ipcRenderer.on(channel, (event, ...args) => func(...args));
     }
