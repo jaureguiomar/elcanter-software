@@ -854,7 +854,7 @@ export default {
                return;
             }
 
-            this.printData(data);
+            this.printProductsData(data);
             this.$emit("updateOrder", data);
             this.$refs["order-add-products-modal"].hide();
          } else {

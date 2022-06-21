@@ -201,38 +201,32 @@ ipcMain.on("print-table", async function(e, data) {
 
     escpos.Image.load(image_path, function(image) {
       device.open(function() {
-        printer.size(1, 1)
-        printer.align("CT")
+        printer.size(0, 0);
+        printer.align("CT");
         printer.image(image, "s8")
           .then(() => {
-            printer.size(0.5, 0.5)
-            printer.feed(1)
             if(fecha_result && data["hora_final"]) {
-              printer.text("Fecha")
-              printer.text(fecha_result)
-              printer.text(data["hora_final"]);
-              printer.feed(1)
+              printer.text("Fecha");
+              printer.text(fecha_result + " " + data["hora_final"]);
+              printer.feed();
             }
-            printer.text("GUERRERO 25")
-            printer.text("CENTRO 47980");
-            printer.text("DEGOLLADO")
-            printer.text("JALISCO");
-            printer.feed(1)
-            printer.text("Mesero")
-            printer.text(data["mesero"]["nombre"] + " " + data["mesero"]["apellidos"])
-            printer.feed(1)
-            printer.text("Id de venta")
-            printer.text("#" + data["idventa"])
-            printer.feed(1)
-            printer.text("No de mesa")
-            printer.text("#" + data["mesa"]["nomesa"])
-            printer.feed(1)
-            printer.drawLine()
-            printer.feed(1)
-            printer.align("CT")
-            printer.text("Cant-Prod-Prec")
-            printer.text("----------")
-            printer.align("LT")
+            printer.text("GUERRERO 25 CENTRO 47980");
+            printer.text("DEGOLLADO JALISCO");
+            printer.feed();
+            printer.text("Mesero");
+            printer.text(data["mesero"]["nombre"] + " " + data["mesero"]["apellidos"]);
+            printer.feed();
+            printer.text("Id de venta");
+            printer.text("#" + data["idventa"]);
+            printer.feed();
+            printer.text("No de mesa");
+            printer.text("#" + data["mesa"]["nomesa"]);
+            printer.text("------------------------------");
+            printer.text("------------------------------");
+            printer.align("CT");
+            printer.text("Cantidad - Producto - Precio");
+            printer.text("------------------------------");
+            printer.align("LT");
 
             let total = 0;
             for(let i = 0; i < comanda_products.length; i++) {
@@ -242,33 +236,33 @@ ipcMain.on("print-table", async function(e, data) {
 
               printer.text(
                 curr_comanda["cantidad"] + ".- " + curr_comanda["producto"]["producto"] + " $" + curr_subtotal + " ($" + curr_comanda["precio"] + " c/u)"
-              )
-              printer.feed(1)
+              );
+              if(i < (comanda_products.length - 1))
+                printer.feed();
             }
             total = total.toFixed(2);
 
             printer.align("CT")
-            printer.drawLine()
-            printer.feed(1)
+            printer.text("------------------------------");
+            printer.text("------------------------------");
             printer.align("LT")
-            .tableCustom(
+            printer.tableCustom(
               [
                 { text: "Subtotal:", align: "LEFT", width: 0.33 },
                 { text: "$" + total, align: "RIGHT", width: 0.33 }
               ]
-            )
-            .tableCustom(
+            );
+            printer.tableCustom(
               [
                 { text: "Impuestos:", align: "LEFT", width: 0.33 },
                 { text: "$0.00", align: "RIGHT", width: 0.33 }
               ]
-            )
-            printer.feed(1)
-            printer.align("CT")
-            printer.drawLine()
-            printer.feed(1)
-            printer.align("LT")
-            .tableCustom(
+            );
+            printer.align("CT");
+            printer.text("------------------------------");
+            printer.text("------------------------------");
+            printer.align("LT");
+            printer.tableCustom(
               [
                 { text: "Metodo pago:", align: "LEFT", width: 0.33 },
                 {
@@ -277,29 +271,28 @@ ipcMain.on("print-table", async function(e, data) {
                   width: 0.33
                 }
               ]
-            )
-            .tableCustom(
+            );
+            printer.tableCustom(
               [
                 { text: "Total pagado:", align: "LEFT", width: 0.33 },
                 { text: "$" + total, align: "RIGHT", width: 0.33 }
               ]
-            )
-            .tableCustom(
+            );
+            printer.tableCustom(
               [
                 { text: "Cambio:", align: "LEFT", width: 0.33 },
                 { text: "$0.00", align: "RIGHT", width: 0.33 }
               ]
-            )
-            printer.feed(1)
-            printer.align("CT")
-            printer.drawLine()
-            printer.feed(1)
-            printer.text("GRACIAS POR SU")
-            printer.text("COMPRA")
-            printer.feed(1)
-            printer.drawLine()
-            printer.cut()
-            printer.close()
+            );
+            printer.align("CT");
+            printer.text("------------------------------");
+            printer.text("------------------------------");
+            printer.text("GRACIAS POR SU");
+            printer.text("COMPRA");
+            printer.text("------------------------------");
+            printer.text("------------------------------");
+            printer.cut();
+            printer.close();
           });
       });
     });
@@ -307,44 +300,38 @@ ipcMain.on("print-table", async function(e, data) {
 
   // Print drinks
   if(comanda_drinks.length > 0) {
-    escpos.Image.load(image_path, function(image) {
-      const device  = new escpos.USB(); // 0x0416, 0x5011
-      const options = { encoding: "utf8" }
-      const printer = new escpos.Printer(device, options);
+    const device  = new escpos.USB(); // 0x0416, 0x5011
+    const options = { encoding: "utf8" }
+    const printer = new escpos.Printer(device, options);
 
+    escpos.Image.load(image_path, function(image) {
       device.open(function() {
-        printer.size(1, 1)
-        printer.align("CT")
+        printer.size(0, 0);
+        printer.align("CT");
         printer.image(image, "s8")
           .then(() => {
-            printer.size(0.5, 0.5)
-            printer.feed(1)
             if(fecha_result && data["hora_final"]) {
-              printer.text("Fecha")
-              printer.text(fecha_result)
-              printer.text(data["hora_final"]);
-              printer.feed(1)
+              printer.text("Fecha");
+              printer.text(fecha_result + " " + data["hora_final"]);
+              printer.feed();
             }
-            printer.text("GUERRERO 25")
-            printer.text("CENTRO 47980");
-            printer.text("DEGOLLADO")
-            printer.text("JALISCO");
-            printer.feed(1)
-            printer.text("Mesero")
-            printer.text(data["mesero"]["nombre"] + " " + data["mesero"]["apellidos"])
-            printer.feed(1)
-            printer.text("Id de venta")
-            printer.text("#" + data["idventa"])
-            printer.feed(1)
-            printer.text("No de mesa")
-            printer.text("#" + data["mesa"]["nomesa"])
-            printer.feed(1)
-            printer.drawLine()
-            printer.feed(1)
-            printer.align("CT")
-            printer.text("Cant-Prod-Prec")
-            printer.text("----------")
-            printer.align("LT")
+            printer.text("GUERRERO 25 CENTRO 47980");
+            printer.text("DEGOLLADO JALISCO");
+            printer.feed();
+            printer.text("Mesero");
+            printer.text(data["mesero"]["nombre"] + " " + data["mesero"]["apellidos"]);
+            printer.feed();
+            printer.text("Id de venta");
+            printer.text("#" + data["idventa"]);
+            printer.feed();
+            printer.text("No de mesa");
+            printer.text("#" + data["mesa"]["nomesa"]);
+            printer.text("------------------------------");
+            printer.text("------------------------------");
+            printer.align("CT");
+            printer.text("Cantidad - Producto - Precio");
+            printer.text("------------------------------");
+            printer.align("LT");
 
             let total = 0;
             for(let i = 0; i < comanda_drinks.length; i++) {
@@ -354,33 +341,33 @@ ipcMain.on("print-table", async function(e, data) {
 
               printer.text(
                 curr_comanda["cantidad"] + ".- " + curr_comanda["producto"]["producto"] + " $" + curr_subtotal + " ($" + curr_comanda["precio"] + " c/u)"
-              )
-              printer.feed(1)
+              );
+              if(i < (comanda_drinks.length - 1))
+                printer.feed();
             }
             total = total.toFixed(2);
 
             printer.align("CT")
-            printer.drawLine()
-            printer.feed(1)
+            printer.text("------------------------------");
+            printer.text("------------------------------");
             printer.align("LT")
-            .tableCustom(
+            printer.tableCustom(
               [
                 { text: "Subtotal:", align: "LEFT", width: 0.33 },
                 { text: "$" + total, align: "RIGHT", width: 0.33 }
               ]
-            )
-            .tableCustom(
+            );
+            printer.tableCustom(
               [
                 { text: "Impuestos:", align: "LEFT", width: 0.33 },
                 { text: "$0.00", align: "RIGHT", width: 0.33 }
               ]
-            )
-            printer.feed(1)
-            printer.align("CT")
-            printer.drawLine()
-            printer.feed(1)
-            printer.align("LT")
-            .tableCustom(
+            );
+            printer.align("CT");
+            printer.text("------------------------------");
+            printer.text("------------------------------");
+            printer.align("LT");
+            printer.tableCustom(
               [
                 { text: "Metodo pago:", align: "LEFT", width: 0.33 },
                 {
@@ -389,29 +376,28 @@ ipcMain.on("print-table", async function(e, data) {
                   width: 0.33
                 }
               ]
-            )
-            .tableCustom(
+            );
+            printer.tableCustom(
               [
                 { text: "Total pagado:", align: "LEFT", width: 0.33 },
                 { text: "$" + total, align: "RIGHT", width: 0.33 }
               ]
-            )
-            .tableCustom(
+            );
+            printer.tableCustom(
               [
                 { text: "Cambio:", align: "LEFT", width: 0.33 },
                 { text: "$0.00", align: "RIGHT", width: 0.33 }
               ]
-            )
-            printer.feed(1)
-            printer.align("CT")
-            printer.drawLine()
-            printer.feed(1)
-            printer.text("GRACIAS POR SU")
-            printer.text("COMPRA")
-            printer.feed(1)
-            printer.drawLine()
-            printer.cut()
-            printer.close()
+            );
+            printer.align("CT");
+            printer.text("------------------------------");
+            printer.text("------------------------------");
+            printer.text("GRACIAS POR SU");
+            printer.text("COMPRA");
+            printer.text("------------------------------");
+            printer.text("------------------------------");
+            printer.cut();
+            printer.close();
           });
       });
     });
@@ -432,13 +418,15 @@ ipcMain.on("print-order", async function(e, data) {
 
   // Format date properly
   let fecha_final = data["fecha_final"];
-  let splitted_fecha_final = fecha_final.split("-");
   let fecha_result = fecha_final;
-  if(splitted_fecha_final.length == 3) {
-    let year = splitted_fecha_final[0];
-    let month = splitted_fecha_final[1];
-    let day = splitted_fecha_final[2];
-    fecha_result = day + "/" + month + "/" + year;
+  if(fecha_final) {
+    let splitted_fecha_final = fecha_final.split("-");
+    if(splitted_fecha_final.length == 3) {
+      let year = splitted_fecha_final[0];
+      let month = splitted_fecha_final[1];
+      let day = splitted_fecha_final[2];
+      fecha_result = day + "/" + month + "/" + year;
+    }
   }
 
   // Split comanda data by category
@@ -461,33 +449,29 @@ ipcMain.on("print-order", async function(e, data) {
 
     escpos.Image.load(image_path, function(image) {
       device.open(function() {
-        printer.size(1, 1)
-        printer.align("CT")
+        printer.size(0, 0);
+        printer.align("CT");
         printer.image(image, "s8")
           .then(() => {
-            printer.size(0.5, 0.5)
-            printer.feed(1)
-            printer.text("Fecha")
-            printer.text(fecha_result)
-            printer.text(data["hora_final"]);
-            printer.feed(1)
-            printer.text("GUERRERO 25")
-            printer.text("CENTRO 47980");
-            printer.text("DEGOLLADO")
-            printer.text("JALISCO");
-            printer.feed(1)
-            printer.text("Mesero")
-            printer.text(data["mesero"]["nombre"] + " " + data["mesero"]["apellidos"])
-            printer.feed(1)
-            printer.text("Id del pedido")
-            printer.text("#" + data["idpedido"])
-            printer.feed(1)
-            printer.drawLine()
-            printer.feed(1)
-            printer.align("CT")
-            printer.text("Cant-Prod-Prec")
-            printer.text("----------")
-            printer.align("LT")
+            if(fecha_result && data["hora_final"]) {
+              printer.text("Fecha");
+              printer.text(fecha_result + " " + data["hora_final"]);
+              printer.feed();
+            }
+            printer.text("GUERRERO 25 CENTRO 47980");
+            printer.text("DEGOLLADO JALISCO");
+            printer.feed();
+            printer.text("Mesero");
+            printer.text(data["mesero"]["nombre"] + " " + data["mesero"]["apellidos"]);
+            printer.feed();
+            printer.text("Id del pedido");
+            printer.text("#" + data["idpedido"]);
+            printer.text("------------------------------");
+            printer.text("------------------------------");
+            printer.align("CT");
+            printer.text("Cantidad - Producto - Precio");
+            printer.text("------------------------------");
+            printer.align("LT");
 
             let total = 0;
             for(let i = 0; i < comanda_products.length; i++) {
@@ -497,33 +481,33 @@ ipcMain.on("print-order", async function(e, data) {
 
               printer.text(
                 curr_comanda["cantidad"] + ".- " + curr_comanda["producto"]["producto"] + " $" + curr_subtotal + " ($" + curr_comanda["precio"] + " c/u)"
-              )
-              printer.feed(1)
+              );
+              if(i < (comanda_products.length - 1))
+                printer.feed();
             }
             total = total.toFixed(2);
 
-            printer.align("CT")
-            printer.drawLine()
-            printer.feed(1)
-            printer.align("LT")
-            .tableCustom(
+            printer.align("CT");
+            printer.text("------------------------------");
+            printer.text("------------------------------");
+            printer.align("LT");
+            printer.tableCustom(
               [
                 { text: "Subtotal:", align: "LEFT", width: 0.33 },
                 { text: "$" + total, align: "RIGHT", width: 0.33 }
               ]
-            )
-            .tableCustom(
+            );
+            printer.tableCustom(
               [
                 { text: "Impuestos:", align: "LEFT", width: 0.33 },
                 { text: "$0.00", align: "RIGHT", width: 0.33 }
               ]
-            )
-            printer.feed(1)
-            printer.align("CT")
-            printer.drawLine()
-            printer.feed(1)
-            printer.align("LT")
-            .tableCustom(
+            );
+            printer.align("CT");
+            printer.text("------------------------------");
+            printer.text("------------------------------");
+            printer.align("LT");
+            printer.tableCustom(
               [
                 { text: "Metodo pago:", align: "LEFT", width: 0.33 },
                 {
@@ -532,29 +516,28 @@ ipcMain.on("print-order", async function(e, data) {
                   width: 0.33
                 }
               ]
-            )
-            .tableCustom(
+            );
+            printer.tableCustom(
               [
                 { text: "Total pagado:", align: "LEFT", width: 0.33 },
                 { text: "$" + total, align: "RIGHT", width: 0.33 }
               ]
-            )
-            .tableCustom(
+            );
+            printer.tableCustom(
               [
                 { text: "Cambio:", align: "LEFT", width: 0.33 },
                 { text: "$0.00", align: "RIGHT", width: 0.33 }
               ]
-            )
-            printer.feed(1)
-            printer.align("CT")
-            printer.drawLine()
-            printer.feed(1)
-            printer.text("GRACIAS POR SU")
-            printer.text("COMPRA")
-            printer.feed(1)
-            printer.drawLine()
-            printer.cut()
-            printer.close()
+            );
+            printer.align("CT");
+            printer.text("------------------------------");
+            printer.text("------------------------------");
+            printer.text("GRACIAS POR SU");
+            printer.text("COMPRA");
+            printer.text("------------------------------");
+            printer.text("------------------------------");
+            printer.cut();
+            printer.close();
           });
       });
     });
@@ -567,33 +550,29 @@ ipcMain.on("print-order", async function(e, data) {
 
     escpos.Image.load(image_path, function(image) {
       device.open(function() {
-        printer.size(1, 1)
-        printer.align("CT")
+        printer.size(0, 0);
+        printer.align("CT");
         printer.image(image, "s8")
           .then(() => {
-            printer.size(0.5, 0.5)
-            printer.feed(1)
-            printer.text("Fecha")
-            printer.text(fecha_result)
-            printer.text(data["hora_final"]);
-            printer.feed(1)
-            printer.text("GUERRERO 25")
-            printer.text("CENTRO 47980");
-            printer.text("DEGOLLADO")
-            printer.text("JALISCO");
-            printer.feed(1)
-            printer.text("Mesero")
-            printer.text(data["mesero"]["nombre"] + " " + data["mesero"]["apellidos"])
-            printer.feed(1)
-            printer.text("Id del pedido")
-            printer.text("#" + data["idpedido"])
-            printer.feed(1)
-            printer.drawLine()
-            printer.feed(1)
-            printer.align("CT")
-            printer.text("Cant-Prod-Prec")
-            printer.text("----------")
-            printer.align("LT")
+            if(fecha_result && data["hora_final"]) {
+              printer.text("Fecha");
+              printer.text(fecha_result + " " + data["hora_final"]);
+              printer.feed();
+            }
+            printer.text("GUERRERO 25 CENTRO 47980");
+            printer.text("DEGOLLADO JALISCO");
+            printer.feed();
+            printer.text("Mesero");
+            printer.text(data["mesero"]["nombre"] + " " + data["mesero"]["apellidos"]);
+            printer.feed();
+            printer.text("Id del pedido");
+            printer.text("#" + data["idpedido"]);
+            printer.text("------------------------------");
+            printer.text("------------------------------");
+            printer.align("CT");
+            printer.text("Cantidad - Producto - Precio");
+            printer.text("------------------------------");
+            printer.align("LT");
 
             let total = 0;
             for(let i = 0; i < comanda_drinks.length; i++) {
@@ -603,33 +582,33 @@ ipcMain.on("print-order", async function(e, data) {
 
               printer.text(
                 curr_comanda["cantidad"] + ".- " + curr_comanda["producto"]["producto"] + " $" + curr_subtotal + " ($" + curr_comanda["precio"] + " c/u)"
-              )
-              printer.feed(1)
+              );
+              if(i < (comanda_drinks.length - 1))
+                printer.feed();
             }
             total = total.toFixed(2);
 
-            printer.align("CT")
-            printer.drawLine()
-            printer.feed(1)
-            printer.align("LT")
-            .tableCustom(
+            printer.align("CT");
+            printer.text("------------------------------");
+            printer.text("------------------------------");
+            printer.align("LT");
+            printer.tableCustom(
               [
                 { text: "Subtotal:", align: "LEFT", width: 0.33 },
                 { text: "$" + total, align: "RIGHT", width: 0.33 }
               ]
-            )
-            .tableCustom(
+            );
+            printer.tableCustom(
               [
                 { text: "Impuestos:", align: "LEFT", width: 0.33 },
                 { text: "$0.00", align: "RIGHT", width: 0.33 }
               ]
-            )
-            printer.feed(1)
-            printer.align("CT")
-            printer.drawLine()
-            printer.feed(1)
-            printer.align("LT")
-            .tableCustom(
+            );
+            printer.align("CT");
+            printer.text("------------------------------");
+            printer.text("------------------------------");
+            printer.align("LT");
+            printer.tableCustom(
               [
                 { text: "Metodo pago:", align: "LEFT", width: 0.33 },
                 {
@@ -638,29 +617,28 @@ ipcMain.on("print-order", async function(e, data) {
                   width: 0.33
                 }
               ]
-            )
-            .tableCustom(
+            );
+            printer.tableCustom(
               [
                 { text: "Total pagado:", align: "LEFT", width: 0.33 },
                 { text: "$" + total, align: "RIGHT", width: 0.33 }
               ]
-            )
-            .tableCustom(
+            );
+            printer.tableCustom(
               [
                 { text: "Cambio:", align: "LEFT", width: 0.33 },
                 { text: "$0.00", align: "RIGHT", width: 0.33 }
               ]
-            )
-            printer.feed(1)
-            printer.align("CT")
-            printer.drawLine()
-            printer.feed(1)
-            printer.text("GRACIAS POR SU")
-            printer.text("COMPRA")
-            printer.feed(1)
-            printer.drawLine()
-            printer.cut()
-            printer.close()
+            );
+            printer.align("CT");
+            printer.text("------------------------------");
+            printer.text("------------------------------");
+            printer.text("GRACIAS POR SU");
+            printer.text("COMPRA");
+            printer.text("------------------------------");
+            printer.text("------------------------------");
+            printer.cut();
+            printer.close();
           });
       });
     });
@@ -700,32 +678,36 @@ ipcMain.on("print-products-table", async function(e, data) {
     const printer = new escpos.Printer(device, options);
 
     device.open(function() {
-      printer.size(0.5, 0.5);
+      printer.align("CT");
+      printer.size(1, 1);
+      printer.align("CT");
+      printer.text("Comanda Cocina");
+      printer.feed();
+      printer.size(0, 0);
       printer.align("CT");
       if(fecha_result && data["hora_final"]) {
         printer.text("Fecha");
-        printer.text(fecha_result);
-        printer.text(data["hora_final"]);
-        printer.feed(1);
+        printer.text(fecha_result + " " + data["hora_final"]);
+        printer.feed();
       }
       printer.text("Mesero");
       printer.text(data["mesero"]["nombre"] + " " + data["mesero"]["apellidos"]);
-      printer.feed(1);
+      printer.feed();
       printer.text("No de mesa");
       printer.text("#" + data["mesa"]["nomesa"]);
-      printer.feed(1);
-      printer.drawLine();
-      printer.feed(1);
+      printer.text("------------------------------");
+      printer.text("------------------------------");
       printer.align("CT");
-      printer.text("Cant-Desc");
-      printer.text("----------");
+      printer.text("Cantidad - Descripcion");
+      printer.text("------------------------------");
       printer.align("LT");
       for(let i = 0; i < comanda_products.length; i++) {
         const curr_comanda = comanda_products[i];
         printer.text(
           curr_comanda["cantidad"] + ".- " + curr_comanda["producto"]["producto"] + ((curr_comanda["comentario"]) ? " (" + curr_comanda["comentario"] + ")" : "")
         );
-        printer.feed(1);
+        if(i < (comanda_products.length - 1))
+          printer.feed();
       }
       printer.cut();
       printer.close();
@@ -739,32 +721,36 @@ ipcMain.on("print-products-table", async function(e, data) {
     const printer = new escpos.Printer(device, options);
 
     device.open(function() {
-      printer.size(0.5, 0.5);
+      printer.align("CT");
+      printer.size(1, 1);
+      printer.align("CT");
+      printer.text("Comanda Bar");
+      printer.feed();
+      printer.size(0, 0);
       printer.align("CT");
       if(fecha_result && data["hora_final"]) {
         printer.text("Fecha");
-        printer.text(fecha_result);
-        printer.text(data["hora_final"]);
-        printer.feed(1);
+        printer.text(fecha_result + " " + data["hora_final"]);
+        printer.feed();
       }
       printer.text("Mesero");
       printer.text(data["mesero"]["nombre"] + " " + data["mesero"]["apellidos"]);
-      printer.feed(1);
+      printer.feed();
       printer.text("No de mesa");
       printer.text("#" + data["mesa"]["nomesa"]);
-      printer.feed(1);
-      printer.drawLine();
-      printer.feed(1);
+      printer.text("------------------------------");
+      printer.text("------------------------------");
       printer.align("CT");
-      printer.text("Cant-Desc");
-      printer.text("----------");
+      printer.text("Cantidad - Descripcion");
+      printer.text("------------------------------");
       printer.align("LT");
       for(let i = 0; i < comanda_drinks.length; i++) {
         const curr_comanda = comanda_drinks[i];
         printer.text(
           curr_comanda["cantidad"] + ".- " + curr_comanda["producto"]["producto"] + ((curr_comanda["comentario"]) ? " (" + curr_comanda["comentario"] + ")" : "")
         );
-        printer.feed(1);
+        if(i < (comanda_drinks.length - 1))
+          printer.feed();
       }
       printer.cut();
       printer.close();
@@ -775,13 +761,15 @@ ipcMain.on("print-products-table", async function(e, data) {
 ipcMain.on("print-products-order", async function(e, data) {
   // Format date properly
   let fecha_final = data["fecha_final"];
-  let splitted_fecha_final = fecha_final.split("-");
   let fecha_result = fecha_final;
-  if(splitted_fecha_final.length == 3) {
-    let year = splitted_fecha_final[0];
-    let month = splitted_fecha_final[1];
-    let day = splitted_fecha_final[2];
-    fecha_result = day + "/" + month + "/" + year;
+  if(fecha_final) {
+    let splitted_fecha_final = fecha_final.split("-");
+    if(splitted_fecha_final.length == 3) {
+      let year = splitted_fecha_final[0];
+      let month = splitted_fecha_final[1];
+      let day = splitted_fecha_final[2];
+      fecha_result = day + "/" + month + "/" + year;
+    }
   }
 
   // Split comanda data by category
@@ -804,30 +792,36 @@ ipcMain.on("print-products-order", async function(e, data) {
     const printer = new escpos.Printer(device, options);
 
     device.open(function() {
-      printer.size(0.5, 0.5);
       printer.align("CT");
-      printer.text("Fecha");
-      printer.text(fecha_result);
-      printer.text(data["hora_final"]);
-      printer.feed(1);
+      printer.size(1, 1);
+      printer.align("CT");
+      printer.text("Comanda Cocina");
+      printer.feed();
+      printer.size(0, 0);
+      printer.align("CT");
+      if(fecha_result && data["hora_final"]) {
+        printer.text("Fecha");
+        printer.text(fecha_result + " " + data["hora_final"]);
+        printer.feed();
+      }
       printer.text("Mesero");
       printer.text(data["mesero"]["nombre"] + " " + data["mesero"]["apellidos"]);
-      printer.feed(1);
+      printer.feed();
       printer.text("Id del pedido");
       printer.text("#" + data["idpedido"]);
-      printer.feed(1);
-      printer.drawLine();
-      printer.feed(1);
+      printer.text("------------------------------");
+      printer.text("------------------------------");
       printer.align("CT");
-      printer.text("Cant-Desc");
-      printer.text("----------");
+      printer.text("Cantidad - Descripcion");
+      printer.text("------------------------------");
       printer.align("LT");
       for(let i = 0; i < comanda_products.length; i++) {
         const curr_comanda = comanda_products[i];
         printer.text(
           curr_comanda["cantidad"] + ".- " + curr_comanda["producto"]["producto"] + ((curr_comanda["comentario"]) ? " (" + curr_comanda["comentario"] + ")" : "")
         );
-        printer.feed(1);
+        if(i < (comanda_products.length - 1))
+          printer.feed();
       }
       printer.cut();
       printer.close();
@@ -841,30 +835,36 @@ ipcMain.on("print-products-order", async function(e, data) {
     const printer = new escpos.Printer(device, options);
 
     device.open(function() {
-      printer.size(0.5, 0.5);
       printer.align("CT");
-      printer.text("Fecha");
-      printer.text(fecha_result);
-      printer.text(data["hora_final"]);
-      printer.feed(1);
+      printer.size(1, 1);
+      printer.align("CT");
+      printer.text("Comanda Bar");
+      printer.feed();
+      printer.size(0, 0);
+      printer.align("CT");
+      if(fecha_result && data["hora_final"]) {
+        printer.text("Fecha");
+        printer.text(fecha_result + " " + data["hora_final"]);
+        printer.feed();
+      }
       printer.text("Mesero");
       printer.text(data["mesero"]["nombre"] + " " + data["mesero"]["apellidos"]);
-      printer.feed(1);
+      printer.feed();
       printer.text("Id del pedido");
       printer.text("#" + data["idpedido"]);
-      printer.feed(1);
-      printer.drawLine();
-      printer.feed(1);
+      printer.text("------------------------------");
+      printer.text("------------------------------");
       printer.align("CT");
-      printer.text("Cant-Desc");
-      printer.text("----------");
+      printer.text("Cantidad - Descripcion");
+      printer.text("------------------------------");
       printer.align("LT");
       for(let i = 0; i < comanda_drinks.length; i++) {
         const curr_comanda = comanda_drinks[i];
         printer.text(
           curr_comanda["cantidad"] + ".- " + curr_comanda["producto"]["producto"] + ((curr_comanda["comentario"]) ? " (" + curr_comanda["comentario"] + ")" : "")
         );
-        printer.feed(1);
+        if(i < (comanda_drinks.length - 1))
+          printer.feed();
       }
       printer.cut();
       printer.close();
