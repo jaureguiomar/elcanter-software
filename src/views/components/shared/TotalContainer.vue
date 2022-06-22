@@ -57,9 +57,10 @@
                   <p
                      v-for="(tmp_order, index) in data.comanda"
                      :key="'order-name-' + ((type == 'table') ? tmp_order.idventa : tmp_order.idpedido) + '-' + tmp_order.idproducto"
+                     style="display: flex; flex-direction: row; align-items: center; margin-bottom: 5px;"
                   >
-                     <span class="marked">({{ tmp_order.cantidad }})</span>
-                     <a
+                     <span class="marked" style="margin-right: 5px;">({{ tmp_order.cantidad }})</span>
+                     <!-- <a
                         @click="onQuantityPlusMinusClick($event, 'plus', index)"
                         class="link-plus"
                         :disabled="closed">
@@ -76,8 +77,14 @@
                         class="link-minus"
                         :disabled="closed">
                         <font-awesome-icon icon="fa-solid fa-eraser" />
+                     </a> -->
+                     <a
+                        @click="showAuthModal(index)"
+                        class="link-minus"
+                        :disabled="closed">
+                        <font-awesome-icon icon="fa-solid fa-circle-xmark" size="2x" />
                      </a>
-                     {{ tmp_order.producto.producto | curString(22) }}
+                     <span style="margin-left: 5px;">{{ tmp_order.producto.producto | cutString(23) }}</span>
                   </p>
                </div>
                <div class="right-content">
@@ -85,6 +92,7 @@
                   <p
                      v-for="(tmp_comanda_price, index) in comanda_price"
                      :key="'order-total-' + ((type == 'table') ? tmp_comanda_price.idventa : tmp_comanda_price.idpedido) + '-' + tmp_comanda_price.idproducto"
+                     style="margin-bottom: 10px;"
                   >
                      <input
                         @keypress="onPriceChangeKeyUp($event, index)"

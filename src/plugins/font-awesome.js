@@ -5,7 +5,7 @@ import {
    faUtensils, faPlus,
    faRectangleList, faCircleChevronRight,
    faCheck, faDownload, faEraser, faDatabase,
-   faXmark
+   faXmark, faCircleXmark
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
@@ -20,4 +20,5 @@ library.add(faDownload);
 library.add(faEraser);
 library.add(faDatabase);
 library.add(faXmark);
+library.add(faCircleXmark);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
