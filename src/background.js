@@ -155,7 +155,7 @@ autoUpdater.on("error", (message) => {
 
 ///////////////////////////////
 // Listen for ipcMain Events //
-ipcMain.on("print-table", async function(e, data) {
+ipcMain.on("print-table", async function(e, data, cuanto_pago, cambio) {
   let image_path = "";
   if(isDevelopment) {
     image_path = path.join(__dirname, "src/assets/img/elcanter-logo-ticket.png");
@@ -260,13 +260,13 @@ ipcMain.on("print-table", async function(e, data) {
           printer.tableCustom(
             [
               { text: "Total pagado:", align: "LEFT", width: 0.33 },
-              { text: "$" + total, align: "RIGHT", width: 0.33 }
+              { text: "$" + ((cuanto_pago) ? cuanto_pago : data["cuanto_pago"]), align: "RIGHT", width: 0.33 }
             ]
           );
           printer.tableCustom(
             [
               { text: "Cambio:", align: "LEFT", width: 0.33 },
-              { text: "$0.00", align: "RIGHT", width: 0.33 }
+              { text: "$" + ((cambio) ? cambio : data["cambio"]), align: "RIGHT", width: 0.33 }
             ]
           );
           printer.align("CT");
@@ -283,7 +283,7 @@ ipcMain.on("print-table", async function(e, data) {
   });
 });
 
-ipcMain.on("print-order", async function(e, data) {
+ipcMain.on("print-order", async function(e, data, cuanto_pago, cambio) {
   let image_path = "";
   if(isDevelopment) {
     image_path = path.join(__dirname, "src/assets/img/elcanter-logo-ticket.png");
@@ -385,13 +385,13 @@ ipcMain.on("print-order", async function(e, data) {
           printer.tableCustom(
             [
               { text: "Total pagado:", align: "LEFT", width: 0.33 },
-              { text: "$" + total, align: "RIGHT", width: 0.33 }
+              { text: "$" + ((cuanto_pago) ? cuanto_pago : data["cuanto_pago"]), align: "RIGHT", width: 0.33 }
             ]
           );
           printer.tableCustom(
             [
               { text: "Cambio:", align: "LEFT", width: 0.33 },
-              { text: "$0.00", align: "RIGHT", width: 0.33 }
+              { text: "$" + ((cambio) ? cambio : data["cambio"]), align: "RIGHT", width: 0.33 }
             ]
           );
           printer.align("CT");

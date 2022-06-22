@@ -125,6 +125,7 @@
                   }}
                </button>
                <button @click="onReprintOrderClick" class="btn btn-custom-totals-outline mb-1">Reimprimir comanda</button>
+               <button :disabled="data.status == 1" @click="onReprintTicketClick" class="btn btn-custom-totals-outline mb-1">Reimprimir ticket</button>
             </div>
 
             <b-modal
@@ -613,6 +614,9 @@ export default {
       onReprintOrderClick() {
          this.printProductsData(this.data);
       },
+      onReprintTicketClick() {
+         this.printData(this.data);
+      },
       calculateHowMany() {
          this.close_order_modal.how_many = parseFloat(this.close_order_modal.how_many).toFixed(2);
          if(isNaN(this.close_order_modal.how_many))
@@ -708,7 +712,7 @@ export default {
                      });
                   }
 
-                  vue_this.printData(vue_this.data);
+                  vue_this.printData(vue_this.data, vue_this.close_order_modal.how_many, vue_this.close_order_modal.change);
                   vue_this.closed = true;
                   vue_this.hideCloseOrderModal();
                } else {
@@ -961,11 +965,11 @@ export default {
             source_url = "ComandasPedidos";
          return source_url;
       },
-      printData(data) {
+      printData(data, howMany, change) {
          if(this.type == "table")
-            window.api.send("print-table", data);
+            window.api.send("print-table", data, howMany, change);
          else
-            window.api.send("print-order", data);
+            window.api.send("print-order", data, howMany, change);
       },
       printProductsData(data) {
          if(this.type == "table")
