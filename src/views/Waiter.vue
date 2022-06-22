@@ -509,6 +509,13 @@ export default {
                   });
                   return;
                }
+            } else {
+               this.$fire({
+                  title: "Error",
+                  text: "No hay corte abierto",
+                  type: "error"
+               });
+               return;
             }
          } else {
             this.$fire({

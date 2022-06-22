@@ -90,7 +90,7 @@ export default {
             if(!last_corte) {
                this.$fire({
                   title: "Error",
-                  text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+                  text: "Debes iniciar corte antes de realizar ventas",
                   type: "error"
                });
                return;
