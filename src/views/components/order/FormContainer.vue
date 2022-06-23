@@ -57,12 +57,41 @@ export default {
             return;
          }
 
-         // Insert order
+         //////////////////////////////
+         // Validate if "corte" open //
+         // Get last valid "corte"
          let response = null;
+         let last_corte_id = null;
+         response = await Vue.prototype.$http.post("Cortes/get_last", {},
+            {
+               responseType: "text",
+               headers: {
+                  "X-Requested-With": "XMLHttpRequest",
+                  "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+               }
+            }
+         );
+         if(response) {
+            const data = response.data;
+            last_corte_id = data["id"];
+         } else {
+            this.$fire({
+               title: "Error",
+               text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+               type: "error"
+            });
+            return;
+         }
+         //////////////////////////////
+         //////////////////////////////
+
+         // Insert order
          let id_order = -1;
+         response = null;
          response = await Vue.prototype.$http.post("Pedidos/insert", querystring.stringify({
             status: 1,
-            idmesero: this.idmesero
+            idmesero: this.idmesero,
+            corte_id: last_corte_id
          }),
          {
             responseType: "text",

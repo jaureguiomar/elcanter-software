@@ -70,96 +70,125 @@ export default {
    },
   methods: {
      async onAbrirMesaClick() {
-        this.personas = parseInt(this.personas);
-        if(isNaN(this.personas))
-         this.personas = 0;
+         this.personas = parseInt(this.personas);
+         if(isNaN(this.personas))
+            this.personas = 0;
 
-        if(this.personas <= 0) {
-           this.$fire({
+         if(this.personas <= 0) {
+            this.$fire({
                title: "Error",
                text: "Debe haber ingresado cantidad de personas",
                type: "error"
             });
-           return;
-        }
-        if(!this.idmesero) {
-           this.$fire({
+            return;
+         }
+         if(!this.idmesero) {
+            this.$fire({
                title: "Error",
                text: "Debe haber ingresado el id del mesero",
                type: "error"
             });
-           return;
-        }
+            return;
+         }
 
-        // Insert sale
-        let response = null;
-        let id_sale = -1;
-        response = await Vue.prototype.$http.post("Ventas/insert", querystring.stringify({
-           status: 1,
-           idmesa: this.idTable,
-           idmesero: this.idmesero,
-           personas: this.personas
-        }),
-        {
-           responseType: "text",
-           headers: {
-              "X-Requested-With": "XMLHttpRequest",
-              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
-           }
-        });
-        if(response) {
-           const data = response.data;
-           if(data != 0) {
-              id_sale = data;
-           } else {
-              this.$fire({
-                  title: "Error",
-                  text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
-                  type: "error"
-               });
-              return;
-           }
-        } else {
-           this.$fire({
+         //////////////////////////////
+         // Validate if "corte" open //
+         // Get last valid "corte"
+         let response = null;
+         let last_corte_id = null;
+         response = await Vue.prototype.$http.post("Cortes/get_last", {},
+            {
+               responseType: "text",
+               headers: {
+                  "X-Requested-With": "XMLHttpRequest",
+                  "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+               }
+            }
+         );
+         if(response) {
+            const data = response.data;
+            last_corte_id = data["id"];
+         } else {
+            this.$fire({
                title: "Error",
                text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
                type: "error"
             });
-           return;
-        }
+            return;
+         }
+         //////////////////////////////
+         //////////////////////////////
 
-        // Get sale
-        let sale_data = null;
-        response = await Vue.prototype.$http.post("Ventas/get_by_id/" + id_sale, {}, {
-           responseType: "text",
-           headers: {
-              "X-Requested-With": "XMLHttpRequest",
-              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
-           }
-        });
-        if(response) {
-           const data = response.data;
-           if(data) {
-             sale_data = data;
-           } else {
-              this.$fire({
+         // Insert sale
+         let id_sale = -1;
+         response = null;
+         response = await Vue.prototype.$http.post("Ventas/insert", querystring.stringify({
+            status: 1,
+            idmesa: this.idTable,
+            idmesero: this.idmesero,
+            personas: this.personas,
+            corte_id: last_corte_id
+         }),
+         {
+            responseType: "text",
+            headers: {
+               "X-Requested-With": "XMLHttpRequest",
+               "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+            }
+         });
+         if(response) {
+            const data = response.data;
+            if(data != 0) {
+               id_sale = data;
+            } else {
+               this.$fire({
+                     title: "Error",
+                     text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+                     type: "error"
+                  });
+               return;
+            }
+         } else {
+            this.$fire({
                   title: "Error",
                   text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
                   type: "error"
                });
-              return;
-           }
-        } else {
-           this.$fire({
-               title: "Error",
-               text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
-               type: "error"
-            });
-           return;
-        }
+            return;
+         }
 
-        this.$emit("updateTableStatus", 2);
-        this.$emit("updateCurrSale", sale_data);
+         // Get sale
+         let sale_data = null;
+         response = await Vue.prototype.$http.post("Ventas/get_by_id/" + id_sale, {}, {
+            responseType: "text",
+            headers: {
+               "X-Requested-With": "XMLHttpRequest",
+               "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+            }
+         });
+         if(response) {
+            const data = response.data;
+            if(data) {
+               sale_data = data;
+            } else {
+               this.$fire({
+                     title: "Error",
+                     text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+                     type: "error"
+                  });
+               return;
+            }
+         } else {
+            this.$fire({
+                  title: "Error",
+                  text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+                  type: "error"
+               });
+            return;
+         }
+
+         this.$emit("updateTableStatus", 2);
+         this.$emit("updateCurrSale", sale_data);
      }
   }
 };

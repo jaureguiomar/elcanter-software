@@ -307,7 +307,52 @@ export default {
          });
    },
    methods: {
-      onNewOrderClick() {
+      async onNewOrderClick() {
+         //////////////////////////////
+         // Validate if "corte" open //
+         // Get last valid "corte"
+         let response = null;
+         let last_corte = null;
+         response = await Vue.prototype.$http.post("Cortes/get_last", {},
+            {
+               responseType: "text",
+               headers: {
+                  "X-Requested-With": "XMLHttpRequest",
+                  "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+               }
+            }
+         );
+         if(response) {
+            const data = response.data;
+            last_corte = data;
+            if(!last_corte) {
+               this.$fire({
+                  title: "Error",
+                  text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+                  type: "error"
+               });
+               return;
+            } else {
+               if(last_corte["status"] == 2) {
+                  this.$fire({
+                     title: "Error",
+                     text: "Debes iniciar corte antes de realizar pedidos",
+                     type: "error"
+                  });
+                  return;
+               }
+            }
+         } else {
+            this.$fire({
+               title: "Error",
+               text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+               type: "error"
+            });
+            return;
+         }
+         //////////////////////////////
+         //////////////////////////////
+
          this.data.new_order = true;
          this.table.selected = -1;
       },
