@@ -634,6 +634,28 @@ ipcMain.on("print-products-order", async function(e, data) {
     });
   }
 });
+
+ipcMain.on("print-corte", async function(e, data) {
+  const device  = new escpos.USB(); // 0x0416, 0x5011
+  const options = { encoding: "utf8" }
+  const printer = new escpos.Printer(device, options);
+
+  device.open(function() {
+    printer.align("CT");
+    printer.size(1, 1);
+    printer.align("CT");
+    printer.text("Corte de Caja");
+    printer.feed();
+    printer.size(0, 0);
+    printer.align("LT");
+    printer.text("Venta de hoy: $" + data["sale_today"]);
+    printer.text("Abrio caja: $" + data["start_money"]);
+    printer.text("Total en caja: $" + data["total_register"]);
+    printer.cut();
+    printer.close();
+  });
+
+});
 // ipcMain.on("async-message", function(e) {
 //   dialog.showErrorBox("System message", "Async message");
 //   // Send a message back

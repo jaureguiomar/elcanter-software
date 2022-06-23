@@ -375,6 +375,11 @@ export default {
       },
       printCloseCashRegister() {
          this.data.close_register.printer_ticket = true;
+         window.api.send("print-corte", {
+            sale_today: this.data.close_register.sale_today,
+            start_money: this.data.open_register.start_money,
+            total_register: this.data.close_register.total_register
+         });
       },
       async confirmCloseCashRegister() {
          if(!this.data.close_register.printer_ticket) {

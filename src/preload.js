@@ -4,7 +4,8 @@ contextBridge.exposeInMainWorld(
     send: (channel, ...args) => {
       let validChannels = [
         "print-table", "print-order",
-        "print-products-table", "print-products-order"
+        "print-products-table", "print-products-order",
+        "print-corte"
       ];
       if(validChannels.includes(channel))
         ipcRenderer.send(channel, ...args);
