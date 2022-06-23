@@ -59,32 +59,35 @@
                      :key="'order-name-' + ((type == 'table') ? tmp_order.idventa : tmp_order.idpedido) + '-' + tmp_order.idproducto"
                      style="display: flex; flex-direction: row; align-items: center; margin-bottom: 5px;"
                   >
-                     <span class="marked" style="margin-right: 5px;">({{ tmp_order.cantidad }})</span>
-                     <!-- <a
-                        @click="onQuantityPlusMinusClick($event, 'plus', index)"
-                        class="link-plus"
-                        :disabled="closed">
-                        <font-awesome-icon icon="fa-solid fa-circle-plus" />
-                     </a>
+                     <span class="marked" style="margin-right: 7px;">({{ tmp_order.cantidad }})</span>
                      <a
-                        @click="onQuantityPlusMinusClick($event, 'minus', index)"
-                        class="link-minus"
-                        :disabled="closed">
-                        <font-awesome-icon icon="fa-solid fa-circle-minus" />
-                     </a>
-                     <a
-                        @click="showAuthModal(index)"
-                        class="link-minus"
-                        :disabled="closed">
-                        <font-awesome-icon icon="fa-solid fa-eraser" />
-                     </a> -->
-                     <a
+                        style="margin-right: 7px;"
                         @click="showAuthModal(index)"
                         class="link-minus"
                         :disabled="closed">
                         <font-awesome-icon icon="fa-solid fa-circle-xmark" size="2x" />
                      </a>
-                     <span style="margin-left: 5px;">{{ tmp_order.producto.producto | cutString(23) }}</span>
+                     <a
+                        style="margin-right: 7px;"
+                        @click="onQuantityPlusMinusClick($event, 'plus', index)"
+                        class="link-plus"
+                        :disabled="closed">
+                        <font-awesome-icon icon="fa-solid fa-circle-plus" size="2x" />
+                     </a>
+                     <a
+                        style="margin-right: 7px;"
+                        @click="onQuantityPlusMinusClick($event, 'minus', index)"
+                        class="link-minus"
+                        :disabled="closed">
+                        <font-awesome-icon icon="fa-solid fa-circle-minus" size="2x" />
+                     </a>
+                     <!-- <a
+                        @click="showAuthModal(index)"
+                        class="link-minus"
+                        :disabled="closed">
+                        <font-awesome-icon icon="fa-solid fa-eraser" />
+                     </a> -->
+                     <span>{{ tmp_order.producto.producto | cutString(14) }}</span>
                   </p>
                </div>
                <div class="right-content">
@@ -934,7 +937,16 @@ export default {
                return;
             }
 
-            this.printProductsData(data);
+            ///////////////////////////////////////
+            // Copy object with arrays by value! //
+            // Create "comanda" only with added products
+            let new_data = null;
+            new_data = { ...data };
+            new_data["comanda"] = [...data["comanda"]];
+            new_data["comanda"].splice(0, (new_data["comanda"].length - this.order_add_products_modal.product_selected.length));
+            ///////////////////////////////////////
+
+            this.printProductsData(new_data);
             this.$emit("updateOrder", data);
             this.$refs["order-add-products-modal"].hide();
          } else {

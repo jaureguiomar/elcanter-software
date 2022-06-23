@@ -276,6 +276,8 @@ ipcMain.on("print-table", async function(e, data, cuanto_pago, cambio) {
           printer.text("COMPRA");
           printer.text("------------------------------");
           printer.text("------------------------------");
+          printer.feed();
+          printer.feed();
           printer.cut();
           printer.close();
         });
@@ -401,6 +403,8 @@ ipcMain.on("print-order", async function(e, data, cuanto_pago, cambio) {
           printer.text("COMPRA");
           printer.text("------------------------------");
           printer.text("------------------------------");
+          printer.feed();
+          printer.feed();
           printer.cut();
           printer.close();
         });
@@ -472,6 +476,8 @@ ipcMain.on("print-products-table", async function(e, data) {
         if(i < (comanda_products.length - 1))
           printer.feed();
       }
+      printer.feed();
+      printer.feed();
       printer.cut();
       printer.close();
     });
@@ -515,6 +521,8 @@ ipcMain.on("print-products-table", async function(e, data) {
         if(i < (comanda_drinks.length - 1))
           printer.feed();
       }
+      printer.feed();
+      printer.feed();
       printer.cut();
       printer.close();
     });
@@ -586,6 +594,8 @@ ipcMain.on("print-products-order", async function(e, data) {
         if(i < (comanda_products.length - 1))
           printer.feed();
       }
+      printer.feed();
+      printer.feed();
       printer.cut();
       printer.close();
     });
@@ -629,6 +639,8 @@ ipcMain.on("print-products-order", async function(e, data) {
         if(i < (comanda_drinks.length - 1))
           printer.feed();
       }
+      printer.feed();
+      printer.feed();
       printer.cut();
       printer.close();
     });
@@ -651,6 +663,8 @@ ipcMain.on("print-corte", async function(e, data) {
     printer.text("Venta de hoy: $" + data["sale_today"]);
     printer.text("Abrio caja: $" + data["start_money"]);
     printer.text("Total en caja: $" + data["total_register"]);
+    printer.feed();
+    printer.feed();
     printer.cut();
     printer.close();
   });
