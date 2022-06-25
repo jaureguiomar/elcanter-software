@@ -258,6 +258,59 @@ export default {
                   formatter: (total) => {
                      return "$" + total;
                   }
+               },
+               {
+                  key: "fecha_final",
+                  label: "Fecha",
+                  sortable: false,
+                  sortByFormatted: true,
+                  filterByFormatted: true,
+                  class: "text-center",
+                  formatter: (date) => {
+                     let new_date = date;
+                     if(new_date) {
+                        const splitted_date = date.split("-");
+                        if(splitted_date.length === 3) {
+                           let day = parseInt(splitted_date[2]);
+                           let month = parseInt(splitted_date[1]);
+                           const year = parseInt(splitted_date[0]);
+                           if(day < 10)
+                              day = "0" + 10;
+                           switch(month) {
+                              case 1: month = "Enero"; break;
+                              case 2: month = "Febrero"; break;
+                              case 3: month = "Marzo"; break;
+                              case 4: month = "Abril"; break;
+                              case 5: month = "Mayo"; break;
+                              case 6: month = "Junio"; break;
+                              case 7: month = "Julio"; break;
+                              case 8: month = "Agosto"; break;
+                              case 9: month = "Septiembre"; break;
+                              case 10: month = "Octubre"; break;
+                              case 11: month = "Noviembre"; break;
+                              case 12: month = "Diciembre"; break;
+                           }
+                           new_date = day + "/" + month + "/" + year;
+                        }
+                     } else {
+                        new_date = "----";
+                     }
+                     return new_date;
+                  }
+               },
+               {
+                  key: "hora_final",
+                  label: "Hora",
+                  sortable: false,
+                  sortByFormatted: true,
+                  filterByFormatted: true,
+                  class: "text-center",
+                  formatter: (time) => {
+                     if(!time)
+                        return "----";
+                     else
+                        return time;
+                  }
                }
             ],
             totalRows: 1,
