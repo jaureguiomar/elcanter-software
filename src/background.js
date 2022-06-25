@@ -197,19 +197,19 @@ ipcMain.on("print-table", async function(e, data, cuanto_pago, cambio) {
           }
           printer.text("GUERRERO 25 CENTRO 47980");
           printer.text("DEGOLLADO JALISCO");
-          printer.feed();
+          // printer.feed();
           printer.text("Mesero");
           printer.text(data["mesero"]["nombre"] + " " + data["mesero"]["apellidos"]);
-          printer.feed();
+          // printer.feed();
           printer.text("Id de venta");
           printer.text("#" + data["idventa"]);
-          printer.feed();
+          // printer.feed();
           printer.text("No de mesa");
           printer.text("#" + data["mesa"]["nomesa"]);
           printer.text("------------------------------");
           printer.text("------------------------------");
           printer.align("CT");
-          printer.text("Cantidad - Producto - Precio");
+          printer.text("Cantidad - Producto - Total");
           printer.text("------------------------------");
           printer.align("LT");
 
@@ -220,10 +220,11 @@ ipcMain.on("print-table", async function(e, data, cuanto_pago, cambio) {
             total += parseFloat(curr_subtotal);
 
             printer.text(
-              curr_comanda["cantidad"] + ".- " + curr_comanda["producto"]["producto"] + " $" + curr_subtotal + " ($" + curr_comanda["precio"] + " c/u)"
+              curr_comanda["cantidad"] + ".-" + curr_comanda["producto"]["producto"] + " $" + curr_subtotal
+              // curr_comanda["cantidad"] + ".- " + curr_comanda["producto"]["producto"] + " $" + curr_subtotal + " ($" + curr_comanda["precio"] + " c/u)"
             );
-            if(i < (data["comanda"].length - 1))
-              printer.feed();
+            // if(i < (data["comanda"].length - 1))
+            //   printer.feed();
           }
           total = total.toFixed(2);
 
@@ -323,14 +324,14 @@ ipcMain.on("print-order", async function(e, data, cuanto_pago, cambio) {
           if(fecha_result && data["hora_final"]) {
             printer.text("Fecha");
             printer.text(fecha_result + " " + data["hora_final"]);
-            printer.feed();
+            // printer.feed();
           }
           printer.text("GUERRERO 25 CENTRO 47980");
           printer.text("DEGOLLADO JALISCO");
-          printer.feed();
+          // printer.feed();
           printer.text("Mesero");
           printer.text(data["mesero"]["nombre"] + " " + data["mesero"]["apellidos"]);
-          printer.feed();
+          // printer.feed();
           printer.text("Id del pedido");
           printer.text("#" + data["idpedido"]);
           printer.text("------------------------------");
@@ -347,10 +348,11 @@ ipcMain.on("print-order", async function(e, data, cuanto_pago, cambio) {
             total += parseFloat(curr_subtotal);
 
             printer.text(
-              curr_comanda["cantidad"] + ".- " + curr_comanda["producto"]["producto"] + " $" + curr_subtotal + " ($" + curr_comanda["precio"] + " c/u)"
+              curr_comanda["cantidad"] + ".-" + curr_comanda["producto"]["producto"] + " $" + curr_subtotal
+              // curr_comanda["cantidad"] + ".- " + curr_comanda["producto"]["producto"] + " $" + curr_subtotal + " ($" + curr_comanda["precio"] + " c/u)"
             );
-            if(i < (data["comanda"].length - 1))
-              printer.feed();
+            // if(i < (data["comanda"].length - 1))
+            //   printer.feed();
           }
           total = total.toFixed(2);
 
