@@ -204,8 +204,8 @@ ipcMain.on("print-table", async function(e, data, cuanto_pago, cambio) {
           printer.text("Id de venta");
           printer.text("#" + data["idventa"]);
           // printer.feed();
-          printer.text("No de mesa");
-          printer.text("#" + data["mesa"]["nomesa"]);
+          printer.text("Mesa");
+          printer.text(data["mesa"]["croquis"] + " #" + data["mesa"]["nomesa"]);
           printer.text("------------------------------");
           printer.text("------------------------------");
           printer.align("CT");
@@ -462,8 +462,8 @@ ipcMain.on("print-products-table", async function(e, data) {
       printer.text("Mesero");
       printer.text(data["mesero"]["nombre"] + " " + data["mesero"]["apellidos"]);
       printer.feed();
-      printer.text("No de mesa");
-      printer.text("#" + data["mesa"]["nomesa"]);
+      printer.text("Mesa");
+      printer.text(data["mesa"]["croquis"] + " #" + data["mesa"]["nomesa"]);
       printer.text("------------------------------");
       printer.text("------------------------------");
       printer.align("CT");

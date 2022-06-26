@@ -446,6 +446,7 @@ export default {
 
          if(this.closed)
             return;
+         this.checkIfNewStatus();
 
          if(type == "plus") {
             quantity ++;
@@ -505,6 +506,7 @@ export default {
             this.comanda_price[index].subtotal_modificado = parseFloat(this.comanda_price[index].subtotal_modificado).toFixed(2);
             if(isNaN(this.comanda_price[index].subtotal_modificado))
                this.comanda_price[index].subtotal_modificado = "0.00";
+            this.checkIfNewStatus();
 
             const vue_this = this;
             const curr_comanda_price = this.comanda_price[index];
@@ -677,6 +679,7 @@ export default {
                cambio: this.close_order_modal.change
             };
 
+         this.checkIfNewStatus();
          Vue.prototype.$http.post(type_source_path + "/" + type_source_endpoint + "/" + ((this.type == "table") ? this.data.idventa : this.data.idpedido),
             querystring.stringify(params),
             {
@@ -702,8 +705,10 @@ export default {
                      let new_status = "";
                      if(data.pedido.status == 1)
                         new_status = "Abierto";
-                     else
+                     else if(data.pedido.status == 2)
                         new_status = "Cerrado";
+                     else
+                        new_status = "Cerrado Modif";
 
                      vue_this.$emit("updateOrderField", {
                         field: "status",
@@ -961,6 +966,45 @@ export default {
       hideOrderAddProducsModal() {
          this.$refs["order-add-products-modal"].hide();
       },
+      checkIfNewStatus() {
+         if(this.data.status == 2) {
+            const vue_this = this;
+            Vue.prototype.$http.post(this.getTypeSourcePath() + "/update/"+ ((this.type == "table") ? this.data.idventa : this.data.idpedido), querystring.stringify({
+               status: 3
+            }),
+            {
+               responseType: "text",
+               headers: {
+                  "X-Requested-With": "XMLHttpRequest",
+                  "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+               }
+            }
+            )
+            .then(function (response) {
+               if(response) {
+                  const data = response.data;
+                     if(data == 1) {
+                     vue_this.$emit("updateOrderField", {
+                        field: "status",
+                        value: "Cerrado Modif"
+                     });
+                  } else {
+                     this.$fire({
+                        title: "Error",
+                        text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+                        type: "error"
+                     });
+                  }
+               } else {
+                  this.$fire({
+                     title: "Error",
+                     text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+                     type: "error"
+                  });
+               }
+            });
+         }
+      },
       getTypeSourcePath() {
          let source_url = "";
          if(this.type == "table")
@@ -1014,10 +1058,10 @@ export default {
    },
    watch: {
       data() {
-         if(this.data.status == 2)
-            this.closed = true;
-         else
-            this.closed = false;
+         // if(this.data.status == 2)
+         //    this.closed = true;
+         // else
+         //    this.closed = false;
 
          this.comanda_price = [];
          for(let i = 0; i < this.data.comanda.length; i++) {

@@ -6,7 +6,7 @@
                <router-link :class="{ 'active': currRoute == 'table' }" to="/">Mesas</router-link>
                <router-link :class="{ 'active': currRoute == 'sale' }" to="/sale">Ventas</router-link>
                <router-link :class="{ 'active': currRoute == 'order' }" to="/order">Pedidos</router-link>
-               <router-link :class="{ 'active': currRoute == 'waiter' }" to="/waiter">Meseros</router-link>
+               <router-link :class="{ 'active': currRoute == 'waiter' }" to="/waiter">Cortes</router-link>
                <router-link :class="{ 'active': currRoute == 'sale-history' }" to="/sale-history">Historial de ventas</router-link>
             </div>
             <div class="logo-content">
