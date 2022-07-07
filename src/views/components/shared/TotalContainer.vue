@@ -721,7 +721,7 @@ export default {
                   }
 
                   vue_this.printData(vue_this.data, vue_this.close_order_modal.how_many, vue_this.close_order_modal.change);
-                  vue_this.closed = true;
+                  // vue_this.closed = true;
                   vue_this.hideCloseOrderModal();
                } else {
                   this.$fire({
