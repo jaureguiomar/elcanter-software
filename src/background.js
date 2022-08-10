@@ -5,14 +5,23 @@ import {
   BrowserWindow, dialog,
   ipcMain
 } from "electron";
+import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
+import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
+import mysql from "mysql";
+
 const { autoUpdater } = require("electron-updater");
 const log = require("electron-log");
 const path = require("path");
-import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
-import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 const isDevelopment = process.env.NODE_ENV !== "production";
 const escpos = require("escpos");
 escpos.USB = require("escpos-usb");
+const mysql_connection = {
+  host: "localhost",
+  user: "root",
+  password: "12345",
+  database: "elcanter_sistema",
+  port: 3310
+};
 let win;
 
 // Scheme must be registered before the app is ready
@@ -46,13 +55,13 @@ async function createWindow() {
       preload: path.join(__dirname, "preload.js")
     }
   })
-  win.removeMenu();
+  // win.removeMenu();
   win.maximize();
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
-    // if (!process.env.IS_TEST) win.webContents.openDevTools()
+    if (!process.env.IS_TEST) win.webContents.openDevTools()
 
     autoUpdater.updateConfigPath = path.join(
       __dirname,
@@ -155,6 +164,395 @@ autoUpdater.on("error", (message) => {
 
 ///////////////////////////////
 // Listen for ipcMain Events //
+ipcMain.on("mysql-data-bakup", function(e, data) {
+  const connection = mysql.createConnection(mysql_connection);
+  let query = "";
+
+  // Delete data
+  query = "delete from sub_apertura";
+  connection.query(query);
+  query = "delete from apertura";
+  connection.query(query);
+  query = "delete from clientes";
+  connection.query(query);
+  query = "delete from usuarios";
+  connection.query(query);
+  query = "delete from cancelaciones_producto_pedido";
+  connection.query(query);
+  query = "delete from cancelaciones_producto_venta";
+  connection.query(query);
+  query = "delete from comandas";
+  connection.query(query);
+  query = "delete from comandas_pedidos";
+  connection.query(query);
+  query = "delete from config";
+  connection.query(query);
+  query = "delete from faltantes";
+  connection.query(query);
+  query = "delete from listafaltantes";
+  connection.query(query);
+  query = "delete from pedidos";
+  connection.query(query);
+  query = "delete from ventas";
+  connection.query(query);
+  query = "delete from corte";
+  connection.query(query);
+  query = "delete from mesas";
+  connection.query(query);
+  query = "delete from meseros";
+  connection.query(query);
+  query = "delete from productos";
+  connection.query(query);
+  query = "delete from categoria_productos";
+  connection.query(query);
+  query = "delete from proveedores";
+  connection.query(query);
+  query = "delete from reg_pago_provedor";
+  connection.query(query);
+  query = "delete from tipo_usuario";
+  connection.query(query);
+
+  // Reset auto increments
+  query = "alter table sub_apertura auto_increment = 1";
+  connection.query(query);
+  query = "alter table apertura auto_increment = 1";
+  connection.query(query);
+  query = "alter table clientes auto_increment = 1";
+  connection.query(query);
+  query = "alter table usuarios auto_increment = 1";
+  connection.query(query);
+  query = "alter table cancelaciones_producto_pedido auto_increment = 1";
+  connection.query(query);
+  query = "alter table cancelaciones_producto_venta auto_increment = 1";
+  connection.query(query);
+  query = "alter table comandas auto_increment = 1";
+  connection.query(query);
+  query = "alter table comandas_pedidos auto_increment = 1";
+  connection.query(query);
+  query = "alter table config auto_increment = 1";
+  connection.query(query);
+  query = "alter table faltantes auto_increment = 1";
+  connection.query(query);
+  query = "alter table listafaltantes auto_increment = 1";
+  connection.query(query);
+  query = "alter table pedidos auto_increment = 1";
+  connection.query(query);
+  query = "alter table ventas auto_increment = 1";
+  connection.query(query);
+  query = "alter table corte auto_increment = 1";
+  connection.query(query);
+  query = "alter table mesas auto_increment = 1";
+  connection.query(query);
+  query = "alter table meseros auto_increment = 1";
+  connection.query(query);
+  query = "alter table productos auto_increment = 1";
+  connection.query(query);
+  query = "alter table categoria_productos auto_increment = 1";
+  connection.query(query);
+  query = "alter table proveedores auto_increment = 1";
+  connection.query(query);
+  query = "alter table reg_pago_provedor auto_increment = 1";
+  connection.query(query);
+  query = "alter table tipo_usuario auto_increment = 1";
+  connection.query(query);
+
+  // Add categoria_productos
+  for(let i = 0; i < data.categoria_poroductos.length; i++) {
+    const curr_categoria_producto = data.categoria_poroductos[i];
+    query = "";
+    query += "insert into categoria_productos set ";
+    query += "idcategoria = " + curr_categoria_producto.idcategoria + ", ";
+    query += "categoria = '" + curr_categoria_producto.categoria + "', ";
+    query += "status = '" + curr_categoria_producto.status + "', ";
+    query += "lugar = '" + curr_categoria_producto.lugar + "'";
+
+    connection.query(query, function(error, rows) {
+      console.log("#########################");
+      console.log("## Categoria Productos ##");
+      console.log("error", error);
+      console.log("rows", rows);
+    });
+  }
+
+  // Add productos
+  for(let i = 0; i < data.productos.length; i++) {
+    const curr_producto = data.productos[i];
+    query = "";
+    query += "insert into productos set ";
+    query += "idproducto = " + curr_producto.idproducto + ", ";
+    query += "producto = '" + curr_producto.producto + "', ";
+    query += "precio = '" + curr_producto.precio + "', ";
+    query += "descripcion = '" + curr_producto.descripcion + "', ";
+    query += "favorito = " + curr_producto.favorito + ", ";
+    query += "idcategoria = " + curr_producto.idcategoria + ", ";
+    query += "status = " + curr_producto.status + ", ";
+    query += "status_active = " + curr_producto.status_active;
+
+    connection.query(query, function(error, rows) {
+      console.log("###############");
+      console.log("## Productos ##");
+      console.log("error", error);
+      console.log("rows", rows);
+    });
+  }
+
+  // Add clientes
+  for(let i = 0; i < data.clientes.length; i++) {
+    const curr_cliente = data.clientes[i];
+    query = "";
+    query += "insert into clientes set ";
+    query += "idcliente = " + curr_cliente.idcliente + ", ";
+    query += "nombre = '" + curr_cliente.nombre + "', ";
+    query += "status = " + curr_cliente.status;
+
+    connection.query(query, function(error, rows) {
+      console.log("##############");
+      console.log("## Clientes ##");
+      console.log("error", error);
+      console.log("rows", rows);
+    });
+  }
+
+  // Add tipo_usuario
+  for(let i = 0; i < data.tipo_usuario.length; i++) {
+    const curr_tipo_usuario = data.tipo_usuario[i];
+    query = "";
+    query += "insert into tipo_usuario set ";
+    query += "idtipousuario = '" + curr_tipo_usuario.idtipousuario + "', ";
+    query += "tipo = '" + curr_tipo_usuario.tipo + "'";
+
+    connection.query(query, function(error, rows) {
+      console.log("##################");
+      console.log("## Tipo Usuario ##");
+      console.log("error", error);
+      console.log("rows", rows);
+    });
+  }
+
+  // Add usuarios
+  for(let i = 0; i < data.usuarios.length; i++) {
+    const curr_usuario = data.usuarios[i];
+    query = "";
+    query += "insert into usuarios set ";
+    query += "usuario = '" + curr_usuario.usuario + "', ";
+    query += "clave = '" + curr_usuario.clave + "', ";
+    query += "nombre = '" + curr_usuario.nombre + "', ";
+    query += "tipo = " + curr_usuario.tipo + ", ";
+    query += "status = " + curr_usuario.status;
+
+    connection.query(query, function(error, rows) {
+      console.log("##############");
+      console.log("## Usuarios ##");
+      console.log("error", error);
+      console.log("rows", rows);
+    });
+  }
+
+  // Add proveedores
+  for(let i = 0; i < data.proveedores.length; i++) {
+    const curr_proveedor = data.proveedores[i];
+    query = "";
+    query += "insert into proveedores set ";
+    query += "nombre = '" + curr_proveedor.nombre + "', ";
+    query += "status = " + curr_proveedor.status;
+
+    connection.query(query, function(error, rows) {
+      console.log("#################");
+      console.log("## Proveedores ##");
+      console.log("error", error);
+      console.log("rows", rows);
+    });
+  }
+
+  // Add meseros
+  for(let i = 0; i < data.meseros.length; i++) {
+    const curr_mesero = data.meseros[i];
+    query = "";
+    query += "insert into meseros set ";
+    query += "idmesero = '" + curr_mesero.idmesero + "', ";
+    query += "nombre = '" + curr_mesero.nombre + "', ";
+    query += "apellidos = '" + curr_mesero.apellidos + "', ";
+    query += "celular = '" + curr_mesero.celular + "', ";
+    query += "status = " + curr_mesero.status + ", ";
+    query += "fecha = '" + curr_mesero.fecha + "', ";
+    query += "status_active = " + curr_mesero.status_active;
+
+    connection.query(query, function(error, rows) {
+      console.log("#############");
+      console.log("## Meseros ##");
+      console.log("error", error);
+      console.log("rows", rows);
+    });
+  }
+
+  // Add mesas
+  for(let i = 0; i < data.mesas.length; i++) {
+    const curr_mesa = data.mesas[i];
+    query = "";
+    query += "insert into mesas set ";
+    query += "idmesa = " + curr_mesa.idmesa + ", ";
+    query += "nomesa = " + curr_mesa.nomesa + ", ";
+    query += "status = " + curr_mesa.status + ", ";
+    query += "croquis = '" + curr_mesa.croquis + "', ";
+    query += "imagen = '" + curr_mesa.imagen + "', ";
+    query += "imagen_ocupada = '" + curr_mesa.imagen_ocupada + "'";
+
+    connection.query(query, function(error, rows) {
+      console.log("###########");
+      console.log("## Mesas ##");
+      console.log("error", error);
+      console.log("rows", rows);
+    });
+  }
+
+  // Add faltantes
+  for(let i = 0; i < data.faltantes.length; i++) {
+    const curr_faltante = data.faltantes[i];
+    query = "";
+    query += "insert into faltantes set ";
+    query += "idfaltante = " + curr_faltante.idfaltante + ", ";
+    query += "fecha = '" + curr_faltante.fecha + "'";
+
+    connection.query(query, function(error, rows) {
+      console.log("################");
+      console.log("## Faltantes ##");
+      console.log("error", error);
+      console.log("rows", rows);
+    });
+  }
+
+  // Add cortes
+  for(let i = 0; i < data.cortes.length; i++) {
+    const curr_corte = data.cortes[i];
+    query = "";
+    query += "insert into corte set ";
+    query += "id = " + curr_corte.id + ", ";
+    query += "status = " + curr_corte.status + ", ";
+    query += "waiter_open = '" + curr_corte.waiter_open + "', ";
+    query += "waiter_close = '" + curr_corte.waiter_close + "', ";
+    query += "date_close = '" + curr_corte.date_close + "', ";
+    query += "amount_start = '" + curr_corte.amount_start + "', ";
+    query += "amount_sale = '" + curr_corte.amount_sale + "', ";
+    query += "amount_order = '" + curr_corte.amount_order + "', ";
+    query += "amount_end = '" + curr_corte.amount_end + "'";
+
+    connection.query(query, function(error, rows) {
+      console.log("############");
+      console.log("## Cortes ##");
+      console.log("error", error);
+      console.log("rows", rows);
+    });
+  }
+
+  // Add ventas
+  for(let i = 0; i < data.ventas.length; i++) {
+    const curr_venta = data.ventas[i];
+    query = "";
+    query += "insert into ventas set ";
+    query += "idventa = " + curr_venta.idventa + ", ";
+    query += "hora_inicio = '" + curr_venta.hora_inicio + "', ";
+    query += "fecha_final = '" + curr_venta.fecha_final + "', ";
+    query += "hora_final = '" + curr_venta.hora_final + "', ";
+    query += "status = " + curr_venta.status + ", ";
+    query += "idmesa = " + curr_venta.idmesa + ", ";
+    query += "idmesero = '" + curr_venta.idmesero + "', ";
+    query += "total = '" + curr_venta.total + "', ";
+    query += "metodo_pago = " + curr_venta.metodo_pago + ", ";
+    query += "propina = " + curr_venta.propina + ", ";
+    query += "monto_propina = '" + curr_venta.monto_propina + "', ";
+    query += "porcentaje_propina = '" + curr_venta.porcentaje_propina + "', ";
+    query += "personas = " + curr_venta.personas + ", ";
+    query += "cuanto_pago = '" + curr_venta.cuanto_pago + "', ";
+    query += "cambio = '" + curr_venta.cambio + "', ";
+    query += "corte_id = " + curr_venta.corte_id;
+
+    connection.query(query, function(error, rows) {
+      console.log("############");
+      console.log("## Ventas ##");
+      console.log("error", error);
+      console.log("rows", rows);
+    });
+  }
+
+  // Add comandas
+  for(let i = 0; i < data.comandas.length; i++) {
+    const curr_comanda = data.comandas[i];
+    query = "";
+    query += "insert into comandas set ";
+    query += "comanda = " + curr_comanda.comanda + ", ";
+    query += "idventa = " + curr_comanda.idventa + ", ";
+    query += "idproducto = " + curr_comanda.idproducto + ", ";
+    query += "precio = '" + curr_comanda.precio + "', ";
+    query += "cantidad = " + curr_comanda.cantidad + ", ";
+    query += "comentario = '" + curr_comanda.comentario + "', ";
+    query += "subtotal = '" + curr_comanda.subtotal + "', ";
+    query += "status = " + curr_comanda.status + ", ";
+    query += "status_comanda = " + curr_comanda.status_comanda + ", ";
+    query += "subtotal_modificado = '" + curr_comanda.subtotal_modificado + "'";
+
+    connection.query(query, function(error, rows) {
+      console.log("##############");
+      console.log("## Comandas ##");
+      console.log("error", error);
+      console.log("rows", rows);
+    });
+  }
+
+  // Add pedidos
+  for(let i = 0; i < data.pedidos.length; i++) {
+    const curr_pedido = data.pedidos[i];
+    query = "";
+    query += "insert into pedidos set ";
+    query += "idpedido = " + curr_pedido.idpedido + ", ";
+    query += "hora_inicio = '" + curr_pedido.hora_inicio + "', ";
+    query += "fecha_final = '" + curr_pedido.fecha_final + "', ";
+    query += "hora_final = '" + curr_pedido.hora_final + "', ";
+    query += "status = " + curr_pedido.status + ", ";
+    query += "idmesero = '" + curr_pedido.idmesero + "', ";
+    query += "total = '" + curr_pedido.total + "', ";
+    query += "metodo_pago = " + curr_pedido.metodo_pago + ", ";
+    query += "idsubapertura = " + curr_pedido.idsubapertura + ", ";
+    query += "cuanto_pago = '" + curr_pedido.cuanto_pago + "', ";
+    query += "cambio = '" + curr_pedido.cambio + "', ";
+    query += "corte_id = " + curr_pedido.corte_id;
+
+    connection.query(query, function(error, rows) {
+      console.log("#############");
+      console.log("## Pedidos ##");
+      console.log("error", error);
+      console.log("rows", rows);
+    });
+  }
+
+  // Add comandas_pedidos
+  for(let i = 0; i < data.comandas_pedidos.length; i++) {
+    const curr_comanda_pedido = data.comandas_pedidos[i];
+    query = "";
+    query += "insert into comandas_pedidos set ";
+    query += "comanda_pedido = " + curr_comanda_pedido.comanda_pedido + ", ";
+    query += "idpedido = " + curr_comanda_pedido.idpedido + ", ";
+    query += "idproducto = " + curr_comanda_pedido.idproducto + ", ";
+    query += "precio = '" + curr_comanda_pedido.precio + "', ";
+    query += "cantidad = " + curr_comanda_pedido.cantidad + ", ";
+    query += "comentario = '" + curr_comanda_pedido.comentario + "', ";
+    query += "subtotal = '" + curr_comanda_pedido.subtotal + "', ";
+    query += "status = " + curr_comanda_pedido.status + ", ";
+    query += "status_comanda = " + curr_comanda_pedido.status_comanda + ", ";
+    query += "subtotal_modificado = '" + curr_comanda_pedido.subtotal_modificado + "'";
+
+    connection.query(query, function(error, rows) {
+      console.log("######################");
+      console.log("## Comandas Pedidos ##");
+      console.log("error", error);
+      console.log("rows", rows);
+    });
+  }
+
+  connection.end(function() {
+    e.sender.send("mysql-data-bakup-reply");
+  });
+});
+
 ipcMain.on("print-table", async function(e, data, cuanto_pago, cambio) {
   let image_path = "";
   if(isDevelopment) {

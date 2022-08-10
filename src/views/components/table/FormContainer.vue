@@ -49,6 +49,7 @@
 
 <script>
 import Vue from "vue";
+import { mapGetters } from "vuex";
 const querystring = require("querystring");
 
 export default {
@@ -67,6 +68,11 @@ export default {
          personas: "",
          idmesero: ""
       };
+   },
+   computed: {
+      ...mapGetters([
+         "getIsOnline"
+      ])
    },
   methods: {
      async onAbrirMesaClick() {
@@ -91,12 +97,18 @@ export default {
             return;
          }
 
+         let http = null;
+         if(this.getIsOnline)
+            http = Vue.prototype.$http;
+         else
+            http = Vue.prototype.$httpLocal;
+
          //////////////////////////////
          // Validate if "corte" open //
          // Get last valid "corte"
          let response = null;
          let last_corte_id = null;
-         response = await Vue.prototype.$http.post("Cortes/get_last", {},
+         response = await http.post("Cortes/get_last", {},
             {
                responseType: "text",
                headers: {
@@ -122,7 +134,7 @@ export default {
          // Insert sale
          let id_sale = -1;
          response = null;
-         response = await Vue.prototype.$http.post("Ventas/insert", querystring.stringify({
+         response = await http.post("Ventas/insert", querystring.stringify({
             status: 1,
             idmesa: this.idTable,
             idmesero: this.idmesero,
@@ -159,7 +171,7 @@ export default {
 
          // Get sale
          let sale_data = null;
-         response = await Vue.prototype.$http.post("Ventas/get_by_id/" + id_sale, {}, {
+         response = await http.post("Ventas/get_by_id/" + id_sale, {}, {
             responseType: "text",
             headers: {
                "X-Requested-With": "XMLHttpRequest",

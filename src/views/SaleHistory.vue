@@ -138,6 +138,7 @@
 
 <script>
 import Vue from "vue";
+import { mapGetters } from "vuex";
 import compHeader from "@/views/layout/Header.vue";
 import compFooter from "@/views/layout/Footer.vue";
 import compLeftContent from "@/views/layout/LeftContent.vue";
@@ -160,9 +161,20 @@ export default {
          }
       };
    },
+   computed: {
+      ...mapGetters([
+         "getIsOnline"
+      ])
+   },
    created() {
+      let http = null;
+      if(this.getIsOnline)
+         http = Vue.prototype.$http;
+      else
+         http = Vue.prototype.$httpLocal;
+
       const vue_this = this;
-      Vue.prototype.$http.get("Rutes/venta_historial", {}, {
+      http.get("Rutes/venta_historial", {}, {
          responseType: "text",
          headers: {
             "X-Requested-With": "XMLHttpRequest",

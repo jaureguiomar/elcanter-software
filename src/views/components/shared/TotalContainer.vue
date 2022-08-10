@@ -399,6 +399,7 @@
 
 <script>
 import Vue from "vue";
+import { mapGetters } from "vuex";
 const querystring = require("querystring");
 
 export default {
@@ -457,7 +458,13 @@ export default {
          }
          new_subtotal = parseFloat(price * quantity).toFixed(2);
 
-         Vue.prototype.$http.post(this.getComandaSourcePath() + "/edit/" + ((this.type == "table") ? curr_order.comanda : curr_order.comanda_pedido),
+         let http = null;
+         if(this.getIsOnline)
+            http = Vue.prototype.$http;
+         else
+            http = Vue.prototype.$httpLocal;
+
+         http.post(this.getComandaSourcePath() + "/edit/" + ((this.type == "table") ? curr_order.comanda : curr_order.comanda_pedido),
             querystring.stringify({
                cantidad: quantity,
                subtotal: new_subtotal
@@ -508,9 +515,15 @@ export default {
                this.comanda_price[index].subtotal_modificado = "0.00";
             this.checkIfNewStatus();
 
+            let http = null;
+            if(this.getIsOnline)
+               http = Vue.prototype.$http;
+            else
+               http = Vue.prototype.$httpLocal;
+
             const vue_this = this;
             const curr_comanda_price = this.comanda_price[index];
-            Vue.prototype.$http.post(this.getComandaSourcePath() + "/edit/" + ((this.type == "table") ? curr_comanda_price.comanda : curr_comanda_price.comanda_pedido),
+            http.post(this.getComandaSourcePath() + "/edit/" + ((this.type == "table") ? curr_comanda_price.comanda : curr_comanda_price.comanda_pedido),
                querystring.stringify({
                   subtotal_modificado: curr_comanda_price.subtotal_modificado
                }),
@@ -566,7 +579,13 @@ export default {
          const password = this.auth_modal.password;
          // const text = this.auth_modal.text;
 
-         Vue.prototype.$http.post(this.getComandaSourcePath() + "/delete/" + ((this.type == "table") ? curr_order.comanda : curr_order.comanda_pedido),
+         let http = null;
+         if(this.getIsOnline)
+            http = Vue.prototype.$http;
+         else
+            http = Vue.prototype.$httpLocal;
+
+         http.post(this.getComandaSourcePath() + "/delete/" + ((this.type == "table") ? curr_order.comanda : curr_order.comanda_pedido),
             querystring.stringify({
                usuario: username,
                clave: password
@@ -680,7 +699,14 @@ export default {
             };
 
          this.checkIfNewStatus();
-         Vue.prototype.$http.post(type_source_path + "/" + type_source_endpoint + "/" + ((this.type == "table") ? this.data.idventa : this.data.idpedido),
+
+         let http = null;
+         if(this.getIsOnline)
+            http = Vue.prototype.$http;
+         else
+            http = Vue.prototype.$httpLocal;
+
+         http.post(type_source_path + "/" + type_source_endpoint + "/" + ((this.type == "table") ? this.data.idventa : this.data.idpedido),
             querystring.stringify(params),
             {
                responseType: "text",
@@ -758,8 +784,14 @@ export default {
          if(this.closed)
             return;
 
+         let http = null;
+         if(this.getIsOnline)
+            http = Vue.prototype.$http;
+         else
+            http = Vue.prototype.$httpLocal;
+
          const vue_this = this;
-         Vue.prototype.$http.get("Productos/get_like/", {}, {
+         http.get("Productos/get_like/", {}, {
             responseType: "json",
             headers: {
                "X-Requested-With": "XMLHttpRequest",
@@ -888,9 +920,15 @@ export default {
             return;
          }
 
+         let http = null;
+         if(this.getIsOnline)
+            http = Vue.prototype.$http;
+         else
+            http = Vue.prototype.$httpLocal;
+
          // Insert order products
          let response = null;
-         response = await Vue.prototype.$http.post(this.getComandaSourcePath() + "/insert",
+         response = await http.post(this.getComandaSourcePath() + "/insert",
             querystring.stringify({
                comanda: JSON.stringify(this.order_add_products_modal.product_selected)
             }),
@@ -923,7 +961,7 @@ export default {
 
          // Get sale / order
          response = null;
-         response = await Vue.prototype.$http.post(this.getTypeSourcePath() + "/get_by_id/" + ((this.type == "table") ? this.data.idventa : this.data.idpedido), {},
+         response = await http.post(this.getTypeSourcePath() + "/get_by_id/" + ((this.type == "table") ? this.data.idventa : this.data.idpedido), {},
          {
             responseType: "text",
             headers: {
@@ -968,8 +1006,14 @@ export default {
       },
       checkIfNewStatus() {
          if(this.data.status == 2) {
+            let http = null;
+            if(this.getIsOnline)
+               http = Vue.prototype.$http;
+            else
+               http = Vue.prototype.$httpLocal;
+
             const vue_this = this;
-            Vue.prototype.$http.post(this.getTypeSourcePath() + "/update/"+ ((this.type == "table") ? this.data.idventa : this.data.idpedido), querystring.stringify({
+            http.post(this.getTypeSourcePath() + "/update/"+ ((this.type == "table") ? this.data.idventa : this.data.idpedido), querystring.stringify({
                status: 3
             }),
             {
@@ -1035,6 +1079,9 @@ export default {
       }
    },
    computed: {
+      ...mapGetters([
+         "getIsOnline"
+      ]),
       orderTotal() {
          let total = 0;
          if(this.data.comanda) {

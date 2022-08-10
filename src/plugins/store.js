@@ -4,12 +4,18 @@ import Vuex from "vuex";
 Vue.use(Vuex);
 const store = new Vuex.Store({
    state: {
-      some_data: null,
+      is_online: true,
    },
-   getters: {},
-   mutations: {},
-   actions: {},
+   getters: {
+      getIsOnline(state) {
+         return state.is_online;
+      }
+   },
+   mutations: {
+      SET_IS_ONLINE_DATA: (state, data) => {
+         state.is_online = data;
+      }
+   }
 });
 
-// module.exports = store; // Same
 export default store;

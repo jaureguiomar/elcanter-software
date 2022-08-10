@@ -220,6 +220,7 @@
 
 <script>
 import Vue from "vue";
+import { mapGetters } from "vuex";
 import compHeader from "@/views/layout/Header.vue";
 import compFooter from "@/views/layout/Footer.vue";
 import compLeftContent from "@/views/layout/LeftContent.vue";
@@ -342,9 +343,20 @@ export default {
          }
       };
    },
+   computed: {
+      ...mapGetters([
+         "getIsOnline"
+      ])
+   },
    created() {
+      let http = null;
+      if(this.getIsOnline)
+         http = Vue.prototype.$http;
+      else
+         http = Vue.prototype.$httpLocal;
+
       const vue_this = this;
-      Vue.prototype.$http.get("Rutes/venta_pedidos")
+      http.get("Rutes/venta_pedidos")
          .then(function (response) {
             if(response) {
                const data = response.data;
@@ -361,12 +373,18 @@ export default {
    },
    methods: {
       async onNewOrderClick() {
+         let http = null;
+         if(this.getIsOnline)
+            http = Vue.prototype.$http;
+         else
+            http = Vue.prototype.$httpLocal;
+
          //////////////////////////////
          // Validate if "corte" open //
          // Get last valid "corte"
          let response = null;
          let last_corte = null;
-         response = await Vue.prototype.$http.post("Cortes/get_last", {},
+         response = await http.post("Cortes/get_last", {},
             {
                responseType: "text",
                headers: {
@@ -449,8 +467,14 @@ export default {
             this.data.new_order = false;
             this.table.selected = selected_order.idpedido;
 
+            let http = null;
+            if(this.getIsOnline)
+               http = Vue.prototype.$http;
+            else
+               http = Vue.prototype.$httpLocal;
+
             const vue_this = this;
-            Vue.prototype.$http.post("Pedidos/get_by_id/" + this.table.selected)
+            http.post("Pedidos/get_by_id/" + this.table.selected)
                .then(function (response) {
                   if(response) {
                      const data = response.data;

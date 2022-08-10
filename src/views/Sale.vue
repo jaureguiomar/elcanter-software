@@ -208,6 +208,7 @@
 
 <script>
 import Vue from "vue";
+import { mapGetters } from "vuex";
 import compHeader from "@/views/layout/Header.vue";
 import compFooter from "@/views/layout/Footer.vue";
 import compLeftContent from "@/views/layout/LeftContent.vue";
@@ -328,9 +329,20 @@ export default {
          }
       };
    },
+   computed: {
+      ...mapGetters([
+         "getIsOnline"
+      ])
+   },
    created() {
+      let http = null;
+      if(this.getIsOnline)
+         http = Vue.prototype.$http;
+      else
+         http = Vue.prototype.$httpLocal;
+
       const vue_this = this;
-      Vue.prototype.$http.get("Rutes/venta_ventas")
+      http.get("Rutes/venta_ventas")
          .then(function (response) {
             if(response) {
                const data = response.data;
@@ -390,8 +402,14 @@ export default {
             this.data.new_sale = false;
             this.table.selected = selected_sale.idventa;
 
+            let http = null;
+            if(this.getIsOnline)
+               http = Vue.prototype.$http;
+            else
+               http = Vue.prototype.$httpLocal;
+
             const vue_this = this;
-            Vue.prototype.$http.post("Ventas/get_by_id/" + this.table.selected)
+            http.post("Ventas/get_by_id/" + this.table.selected)
                .then(function (response) {
                   if(response) {
                      const data = response.data;

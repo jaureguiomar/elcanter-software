@@ -236,6 +236,7 @@
 
 <script>
 import Vue from "vue";
+import { mapGetters } from "vuex";
 const querystring = require("querystring");
 import compHeader from "@/views/layout/Header.vue";
 import compFooter from "@/views/layout/Footer.vue";
@@ -277,6 +278,11 @@ export default {
          }
       };
    },
+   computed: {
+      ...mapGetters([
+         "getIsOnline"
+      ])
+   },
    created() {
       this.data.sale_total = this.calculateSaleTotal();
       this.data.order_total = this.calculateOrderTotal();
@@ -307,8 +313,14 @@ export default {
             return;
          }
 
+         let http = null;
+         if(this.getIsOnline)
+            http = Vue.prototype.$http;
+         else
+            http = Vue.prototype.$httpLocal;
+
          const vue_this = this;
-         Vue.prototype.$http.post("Cortes/insert",
+         http.post("Cortes/insert",
             querystring.stringify({
                waiter_open: this.data.open_register.waiter_id,
                amount_start: this.data.open_register.start_money
@@ -342,9 +354,15 @@ export default {
             });
       },
       onOpenCashRegister() {
+         let http = null;
+         if(this.getIsOnline)
+            http = Vue.prototype.$http;
+         else
+            http = Vue.prototype.$httpLocal;
+
          // Check if therers an open "corte"
          const vue_this = this;
-         Vue.prototype.$http.post("Cortes/get_last", {},
+         http.post("Cortes/get_last", {},
             {
                responseType: "text",
                headers: {
@@ -400,10 +418,16 @@ export default {
             return;
          }
 
+         let http = null;
+         if(this.getIsOnline)
+            http = Vue.prototype.$http;
+         else
+            http = Vue.prototype.$httpLocal;
+
          // Get last valid "corte"
          let response = null;
          let last_corte = null;
-         response = await Vue.prototype.$http.post("Cortes/get_last", {},
+         response = await http.post("Cortes/get_last", {},
             {
                responseType: "text",
                headers: {
@@ -448,9 +472,15 @@ export default {
             last_corte["amount_order"] = this.data.close_register.sale_order;
             last_corte["amount_end"] = this.data.close_register.sale_today;
 
+            let http = null;
+            if(this.getIsOnline)
+               http = Vue.prototype.$http;
+            else
+               http = Vue.prototype.$httpLocal;
+
             // Get update "corte"
             let response = null;
-            response = await Vue.prototype.$http.post("Cortes/update/" + last_corte["id"], querystring.stringify({
+            response = await http.post("Cortes/update/" + last_corte["id"], querystring.stringify({
                corte: JSON.stringify(last_corte)
             }),
                {
@@ -489,11 +519,17 @@ export default {
          }
       },
       async onCloseCashRegister() {
+         let http = null;
+         if(this.getIsOnline)
+            http = Vue.prototype.$http;
+         else
+            http = Vue.prototype.$httpLocal;
+
          ////////////////////////////
          // Get last valid "corte" //
          let response = null;
          let last_corte = null;
-         response = await Vue.prototype.$http.post("Cortes/get_last", {},
+         response = await http.post("Cortes/get_last", {},
             {
                responseType: "text",
                headers: {
@@ -535,7 +571,7 @@ export default {
          // Get ALL sales by "corte" //
          response = null;
          let sales_by_corte = null;
-         response = await Vue.prototype.$http.post("Ventas/get_sales_by_corte/" + last_corte["id"], {},
+         response = await http.post("Ventas/get_sales_by_corte/" + last_corte["id"], {},
             {
                responseType: "text",
                headers: {
@@ -560,7 +596,7 @@ export default {
          // Get ALL orders by "corte" //
          response = null;
          let orders_by_corte = null;
-         response = await Vue.prototype.$http.post("Pedidos/get_orders_by_corte/" + last_corte["id"], {},
+         response = await http.post("Pedidos/get_orders_by_corte/" + last_corte["id"], {},
             {
                responseType: "text",
                headers: {
@@ -678,8 +714,14 @@ export default {
             return;
          }
 
+         let http = null;
+         if(this.getIsOnline)
+            http = Vue.prototype.$http;
+         else
+            http = Vue.prototype.$httpLocal;
+
          const vue_this = this;
-         Vue.prototype.$http.post("Meseros/reporte_ventas_pedidos", querystring.stringify({
+         http.post("Meseros/reporte_ventas_pedidos", querystring.stringify({
             fecha_mesero: date,
             mesero_uuid: num
          }),

@@ -6,11 +6,13 @@ import store from "@/plugins/store";
 import i18n from "@/plugins/i18n";
 import "@/plugins/event-bus";
 import "@/plugins/axios";
+import "@/plugins/axios-local";
 import "@/plugins/filters";
 import "@/plugins/directives";
 import "@/plugins/bootstrap";
 import "@/plugins/font-awesome";
 import "@/plugins/simple-alert";
+import "@/plugins/internet-checker";
 // Global Template styles
 import "@/assets/scss/styles.scss";
 

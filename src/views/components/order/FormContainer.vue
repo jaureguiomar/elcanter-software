@@ -38,6 +38,7 @@
 
 <script>
 import Vue from "vue";
+import { mapGetters } from "vuex";
 const querystring = require("querystring");
 
 export default {
@@ -45,6 +46,11 @@ export default {
       return {
          idmesero: ""
       };
+   },
+   computed: {
+      ...mapGetters([
+         "getIsOnline"
+      ])
    },
    methods: {
       async onAbrirPedidoClick() {
@@ -57,12 +63,18 @@ export default {
             return;
          }
 
+         let http = null;
+         if(this.getIsOnline)
+            http = Vue.prototype.$http;
+         else
+            http = Vue.prototype.$httpLocal;
+
          //////////////////////////////
          // Validate if "corte" open //
          // Get last valid "corte"
          let response = null;
          let last_corte_id = null;
-         response = await Vue.prototype.$http.post("Cortes/get_last", {},
+         response = await http.post("Cortes/get_last", {},
             {
                responseType: "text",
                headers: {
@@ -88,7 +100,7 @@ export default {
          // Insert order
          let id_order = -1;
          response = null;
-         response = await Vue.prototype.$http.post("Pedidos/insert", querystring.stringify({
+         response = await http.post("Pedidos/insert", querystring.stringify({
             status: 1,
             idmesero: this.idmesero,
             corte_id: last_corte_id
@@ -123,7 +135,7 @@ export default {
 
          // Get inserted order
          let new_order = null;
-         response = await Vue.prototype.$http.get("Pedidos/get_by_id/" + id_order, {}, {
+         response = await http.get("Pedidos/get_by_id/" + id_order, {}, {
             responseType: "json",
             headers: {
                "X-Requested-With": "XMLHttpRequest",

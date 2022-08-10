@@ -35,6 +35,7 @@
 
 <script>
 import Vue from "vue";
+import { mapGetters } from "vuex";
 const querystring = require("querystring");
 
 export default {
@@ -64,18 +65,29 @@ export default {
       return {
       };
    },
+   computed: {
+      ...mapGetters([
+         "getIsOnline"
+      ])
+   },
    methods: {
       async onTableContainerClick() {
          let new_id = -1;
          let new_status = -1;
          let no_table = -1;
 
+         let http = null;
+         if(this.getIsOnline)
+            http = Vue.prototype.$http;
+         else
+            http = Vue.prototype.$httpLocal;
+
          //////////////////////////////
          // Validate if "corte" open //
          // Get last valid "corte"
          let response = null;
          let last_corte = null;
-         response = await Vue.prototype.$http.post("Cortes/get_last", {},
+         response = await http.post("Cortes/get_last", {},
             {
                responseType: "text",
                headers: {
@@ -127,7 +139,7 @@ export default {
 
             // Get sale by "idTable"
             if(new_status == 2) {
-               let response = await Vue.prototype.$http.post("Ventas/get_where", querystring.stringify({
+               let response = await http.post("Ventas/get_where", querystring.stringify({
                   status: 1,
                   idmesa: new_id
                }), {

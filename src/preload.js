@@ -3,6 +3,7 @@ contextBridge.exposeInMainWorld(
   "api", {
     send: (channel, ...args) => {
       let validChannels = [
+        "mysql-data-bakup",
         "print-table", "print-order",
         "print-products-table", "print-products-order",
         "print-corte"
@@ -11,7 +12,9 @@ contextBridge.exposeInMainWorld(
         ipcRenderer.send(channel, ...args);
     },
     receive: (channel, func) => {
-      let validChannels = [];
+      let validChannels = [
+        "mysql-data-bakup-reply"
+      ];
       if(validChannels.includes(channel))
         ipcRenderer.on(channel, (event, ...args) => func(...args));
     }
