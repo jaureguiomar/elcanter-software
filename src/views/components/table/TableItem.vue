@@ -1,11 +1,11 @@
 <template>
    <div
-      @click="onTableContainerClick"
       class="table-container"
       :class="
          [(statusTable == 2 ? 'active' : ''),
          (currIdSelected == idTable ? 'selected' : '')]
       "
+      @click="onTableContainerClick"
    >
       <div class="table-container-margin">
          <a

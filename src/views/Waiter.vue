@@ -280,6 +280,7 @@ export default {
    },
    computed: {
       ...mapGetters([
+         "getCorteLast",
          "getIsOnline"
       ])
    },
@@ -303,7 +304,7 @@ export default {
       hideOpenCashRegister() {
          this.$refs["open-cash-register-modal"].hide();
       },
-      confirmOpenCashRegister() {
+      async confirmOpenCashRegister() {
          if(parseFloat(this.data.open_register.start_money) <= 0 || !this.data.open_register.waiter_id) {
             this.$fire({
                title: "Error",
@@ -319,8 +320,10 @@ export default {
          else
             http = Vue.prototype.$httpLocal;
 
-         const vue_this = this;
-         http.post("Cortes/insert",
+         // Insert new "corte"
+         let response = null;
+         let id_corte = -1;
+         response = await http.post("Cortes/insert",
             querystring.stringify({
                waiter_open: this.data.open_register.waiter_id,
                amount_start: this.data.open_register.start_money
@@ -333,60 +336,65 @@ export default {
                }
             }
          )
-         .then(function (response) {
-               if(response) {
-                  // const data = response.data;
-                  vue_this.data.open_register.start_money = "0.00";
-                  vue_this.data.open_register.waiter_id = "";
-                  vue_this.$refs["open-cash-register-modal"].hide();
-                  vue_this.$fire({
-                     title: "Ok",
-                     text: "Corte iniciado",
-                     type: "success"
-                  });
-               } else {
-                  this.$fire({
-                     title: "Error",
-                     text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
-                     type: "error"
-                  });
-               }
+         if(response) {
+            const data = response.data;
+            id_corte = data;
+         } else {
+            this.$fire({
+               title: "Error",
+               text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+               type: "error"
             });
-      },
-      onOpenCashRegister() {
-         let http = null;
-         if(this.getIsOnline)
-            http = Vue.prototype.$http;
-         else
-            http = Vue.prototype.$httpLocal;
+            return;
+         }
 
-         // Check if therers an open "corte"
-         const vue_this = this;
-         http.post("Cortes/get_last", {},
-            {
-               responseType: "text",
-               headers: {
-                  "X-Requested-With": "XMLHttpRequest",
-                  "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
-               }
-            }
-         )
-         .then(function (response) {
-               const data = response.data;
-               if(!data) {
-                  vue_this.$refs["open-cash-register-modal"].show();
-               } else {
-                  if(data["status"] == 1) {
-                     vue_this.$fire({
-                        title: "Error",
-                        text: "Ya existe un corte abierto!",
-                        type: "error"
-                     });
-                  } else {
-                     vue_this.$refs["open-cash-register-modal"].show();
+         // Get inserted "corte" by id
+         if(id_corte > 0) {
+            response = await http.post(`Cortes/get_by_id/${ id_corte }`, {
+                  responseType: "text",
+                  headers: {
+                     "X-Requested-With": "XMLHttpRequest",
+                     "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
                   }
                }
+            )
+            if(response) {
+               const data = response.data;
+               this.$store.commit("SET_CORTE_LAST", data);
+            } else {
+               this.$fire({
+                  title: "Error",
+                  text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+                  type: "error"
+               });
+               return;
+            }
+
+            this.$refs["open-cash-register-modal"].hide();
+            this.$fire({
+               title: "Ok",
+               text: "Corte iniciado",
+               type: "success"
             });
+         }
+      },
+      onOpenCashRegister() {
+         this.data.open_register.start_money = "0.00";
+         this.data.open_register.waiter_id = "";
+
+         if(!this.getCorteLast) {
+            this.$refs["open-cash-register-modal"].show();
+         } else {
+            if(this.getCorteLast["status"] == 1) {
+               this.$fire({
+                  title: "Error",
+                  text: "Ya existe un corte abierto!",
+                  type: "error"
+               });
+            } else {
+               this.$refs["open-cash-register-modal"].show();
+            }
+         }
       },
       hideCloseCashRegister() {
          this.$refs["close-cash-register-modal"].hide();
@@ -418,59 +426,32 @@ export default {
             return;
          }
 
-         let http = null;
-         if(this.getIsOnline)
-            http = Vue.prototype.$http;
-         else
-            http = Vue.prototype.$httpLocal;
-
-         // Get last valid "corte"
-         let response = null;
-         let last_corte = null;
-         response = await http.post("Cortes/get_last", {},
-            {
-               responseType: "text",
-               headers: {
-                  "X-Requested-With": "XMLHttpRequest",
-                  "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
-               }
-            }
-         );
-         if(response) {
-            const data = response.data;
-            last_corte = data;
-            if(!last_corte) {
-               this.$fire({
-                  title: "Error",
-                  text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
-                  type: "error"
-               });
-               return;
-            } else {
-               if(last_corte["status"] == 2) {
-                  this.$fire({
-                     title: "Error",
-                     text: "No hay corte abierto",
-                     type: "error"
-                  });
-               }
-            }
-         } else {
+         if(!this.getCorteLast) {
             this.$fire({
                title: "Error",
                text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
                type: "error"
             });
             return;
+         } else {
+            if(this.getCorteLast["status"] == 2) {
+               this.$fire({
+                  title: "Error",
+                  text: "No hay corte abierto",
+                  type: "error"
+               });
+            }
          }
 
-         if(last_corte) {
-            last_corte["status"] = 2;
-            last_corte["waiter_close"] = this.data.close_register.waiter_id;
-            last_corte["date_close"] = new Date();
-            last_corte["amount_sale"] = this.data.close_register.sale_sale;
-            last_corte["amount_order"] = this.data.close_register.sale_order;
-            last_corte["amount_end"] = this.data.close_register.sale_today;
+         if(this.getCorteLast) {
+            this.$store.commit("SET_CORTE_CLOSE", {
+               status: 2,
+               waiter_close: this.data.close_register.waiter_id,
+               date_close: new Date(),
+               amount_sale: this.data.close_register.sale_sale,
+               amount_order: this.data.close_register.sale_order,
+               amount_end: this.data.close_register.sale_today
+            });
 
             let http = null;
             if(this.getIsOnline)
@@ -480,8 +461,8 @@ export default {
 
             // Get update "corte"
             let response = null;
-            response = await http.post("Cortes/update/" + last_corte["id"], querystring.stringify({
-               corte: JSON.stringify(last_corte)
+            response = await http.post("Cortes/update/" + this.getCorteLast["id"], querystring.stringify({
+               corte: JSON.stringify(this.getCorteLast)
             }),
                {
                   responseType: "text",
@@ -519,38 +500,8 @@ export default {
          }
       },
       async onCloseCashRegister() {
-         let http = null;
-         if(this.getIsOnline)
-            http = Vue.prototype.$http;
-         else
-            http = Vue.prototype.$httpLocal;
-
-         ////////////////////////////
-         // Get last valid "corte" //
-         let response = null;
-         let last_corte = null;
-         response = await http.post("Cortes/get_last", {},
-            {
-               responseType: "text",
-               headers: {
-                  "X-Requested-With": "XMLHttpRequest",
-                  "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
-               }
-            }
-         );
-         if(response) {
-            const data = response.data;
-            last_corte = data;
-            if(data) {
-               if(data["status"] == 2) {
-                  this.$fire({
-                     title: "Error",
-                     text: "No hay corte abierto",
-                     type: "error"
-                  });
-                  return;
-               }
-            } else {
+         if(this.getCorteLast) {
+            if(this.getCorteLast["status"] == 2) {
                this.$fire({
                   title: "Error",
                   text: "No hay corte abierto",
@@ -561,7 +512,7 @@ export default {
          } else {
             this.$fire({
                title: "Error",
-               text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+               text: "No hay corte abierto",
                type: "error"
             });
             return;
@@ -569,9 +520,15 @@ export default {
 
          //////////////////////////////
          // Get ALL sales by "corte" //
-         response = null;
+         let http = null;
+         if(this.getIsOnline)
+            http = Vue.prototype.$http;
+         else
+            http = Vue.prototype.$httpLocal;
+
+         let response = null;
          let sales_by_corte = null;
-         response = await http.post("Ventas/get_sales_by_corte/" + last_corte["id"], {},
+         response = await http.post("Ventas/get_sales_by_corte/" + this.getCorteLast["id"], {},
             {
                responseType: "text",
                headers: {
@@ -596,7 +553,7 @@ export default {
          // Get ALL orders by "corte" //
          response = null;
          let orders_by_corte = null;
-         response = await http.post("Pedidos/get_orders_by_corte/" + last_corte["id"], {},
+         response = await http.post("Pedidos/get_orders_by_corte/" + this.getCorteLast["id"], {},
             {
                responseType: "text",
                headers: {
@@ -657,8 +614,8 @@ export default {
             this.data.close_register.sale_today = total;
             this.data.close_register.sale_sale = total_sale;
             this.data.close_register.sale_order = total_order;
-            this.data.close_register.total_register = (parseFloat(total) + parseFloat(last_corte["amount_start"])).toFixed(2);
-            this.data.open_register.start_money = last_corte["amount_start"];
+            this.data.close_register.total_register = (parseFloat(total) + parseFloat(this.getCorteLast["amount_start"])).toFixed(2);
+            this.data.open_register.start_money = this.getCorteLast["amount_start"];
             this.data.close_register.printer_ticket = false;
             this.$refs["close-cash-register-modal"].show();
          } else {

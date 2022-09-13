@@ -12,15 +12,70 @@
 </template>
 
 <script>
+import Vue from "vue";
+import { mapGetters } from "vuex";
+
 export default {
   name: "App",
   data() {
       return {};
   },
-   created() {
+  computed: {
+      ...mapGetters([
+         "getIsOnline"
+      ])
+   },
+   async created() {
       this.$store.commit("SET_IS_ONLINE_DATA", window.navigator.onLine);
+      this.getLastCorte();
    },
    methods: {
+      async getLastCorte() {
+         let http = null;
+         if(this.getIsOnline)
+            http = Vue.prototype.$http;
+         else
+            http = Vue.prototype.$httpLocal;
+
+         //////////////////////////////
+         // Validate if "corte" open //
+         // Get last valid "corte"
+         const vue_this = this;
+         let response = null;
+         let last_corte = null;
+
+         response = await http.post("Cortes/get_last", {},
+            {
+               responseType: "text",
+               headers: {
+                  "X-Requested-With": "XMLHttpRequest",
+                  "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+               }
+            }
+         );
+         if(response) {
+            const data = response.data;
+            last_corte = data;
+            if(!last_corte) {
+               this.$fire({
+                  title: "Error",
+                  text: "Debes iniciar corte antes de realizar ventas",
+                  type: "error"
+               });
+               return;
+            } else {
+               console.log("last_corte", last_corte);
+               vue_this.$store.commit("SET_CORTE_LAST", last_corte);
+            }
+         } else {
+            this.$fire({
+               title: "Error",
+               text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+               type: "error"
+            });
+            return;
+         }
+      },
       async onInternetStatus(new_status) {
          this.$store.commit("SET_IS_ONLINE_DATA", new_status);
 
