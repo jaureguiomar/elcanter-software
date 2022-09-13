@@ -64,7 +64,6 @@ export default {
                });
                return;
             } else {
-               console.log("last_corte", last_corte);
                vue_this.$store.commit("SET_CORTE_LAST", last_corte);
             }
          } else {
