@@ -411,6 +411,14 @@ export default {
       type: {
          type: String,
          required: true
+      },
+      title: {
+         type: String,
+         required: true
+      },
+      index: {
+         type: Number,
+         required: true
       }
    },
    data() {
@@ -988,6 +996,49 @@ export default {
             new_data["comanda"] = [...data["comanda"]];
             new_data["comanda"].splice(0, (new_data["comanda"].length - this.order_add_products_modal.product_selected.length));
             ///////////////////////////////////////
+
+            if(this.title === "Cocina")
+               this.$store.commit("SET_MESA_DATA_BY_INDEX", {
+                  ...data,
+                  key: "cocina",
+                  index: this.index
+               });
+            else if(this.title === "Barra")
+               this.$store.commit("SET_MESA_DATA_BY_INDEX", {
+                  ...data,
+                  key: "barra",
+                  index: this.index
+               });
+            else if(this.title === "Patio")
+               this.$store.commit("SET_MESA_DATA_BY_INDEX", {
+                  ...data,
+                  key: "patio",
+                  index: this.index
+               });
+            else if(this.title === "")
+               this.$store.commit("SET_MESA_DATA_BY_INDEX", {
+                  ...data,
+                  key: "patio2",
+                  index: this.index
+               });
+            else if(this.title === "Presidencial")
+               this.$store.commit("SET_MESA_DATA_BY_INDEX", {
+                  ...data,
+                  key: "presidencial",
+                  index: this.index
+               });
+            else if(this.title === "Redonda")
+               this.$store.commit("SET_MESA_DATA_BY_INDEX", {
+                  ...data,
+                  key: "redonda",
+                  index: this.index
+               });
+            else if(this.title === "Cuartito")
+               this.$store.commit("SET_MESA_DATA_BY_INDEX", {
+                  ...data,
+                  key: "cuartito",
+                  index: this.index
+               });
 
             this.printProductsData(new_data);
             this.$emit("updateOrder", data);

@@ -154,6 +154,8 @@
                            "
                            :data="data.table.selected.curr_sale"
                            type="table"
+                           :title="data.table.selected.title"
+                           :index="data.table.selected.index"
                            @updateOrder="updateOrder"
                            @updateOrderComandaField="updateOrderComandaField"
                            @removeOrderComanda="removeOrderComanda"

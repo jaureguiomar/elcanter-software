@@ -51,8 +51,8 @@ const store = new Vuex.Store({
       SET_MESA_BARRA: (state, data) => {
          state.mesa.barra = data;
       },
-      // SET_MESA_BARRA_DATA: (state, data) => {
-      //    state.mesa.barra[data.index] = {
+      // SET_MESA_DATA_BY_KEY: (state, data) => {
+      //    state.mesa[data.key][data.index] = {
       //       cambio: data.cambio,
       //       comanda: data.comanda,
       //       corte_id: data.corte_id,
