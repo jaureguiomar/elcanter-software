@@ -34,9 +34,9 @@
 </template>
 
 <script>
-// import Vue from "vue";
+import Vue from "vue";
 import { mapGetters } from "vuex";
-// const querystring = require("querystring");
+const querystring = require("querystring");
 
 export default {
    props: {
@@ -75,15 +75,23 @@ export default {
    computed: {
       ...mapGetters([
          "getMesaBarra",
-         "getMesaCocina",
-         "getMesaCuartito",
-         "getMesaPatio1",
-         "getMesaPatio2",
-         "getMesaPresidencial",
-         "getMesaRedonda",
          "getCorteLast",
          "getIsOnline"
       ])
+   },
+   created() {
+      if(this.title === "Barra") {
+         console.error("---");
+         console.log("idTable", this.idTable);
+         console.log("statusTable", this.statusTable);
+         console.log("noTable", this.noTable);
+         console.log("currIdSelected", this.currIdSelected);
+         console.log("fontSize", this.fontSize);
+         console.log("index", this.index);
+         console.log("title", this.title);
+         console.log("this.getMesaBarra", this.getMesaBarra);
+         console.log("this.getMesaBarra[index]", this.getMesaBarra[this.index]);
+      }
    },
    methods: {
       async onTableContainerClick() {
@@ -110,9 +118,9 @@ export default {
             }
          }
 
-         // console.log("adnioanido");
-         // console.log("this.idTable", this.idTable);
-         // console.log("this.currIdSelected", this.currIdSelected);
+         console.log("adnioanido");
+         console.log("this.idTable", this.idTable);
+         console.log("this.currIdSelected", this.currIdSelected);
          if(this.idTable == this.currIdSelected) {
             new_id = -1;
             new_status = -1;
@@ -123,68 +131,49 @@ export default {
             new_status = this.statusTable;
             no_table = this.noTable;
 
-            let data = null;
-            if(this.title === "Cocina")
-               data = this.getMesaCocina[this.index];
-            else if(this.title === "Barra")
-               data = this.getMesaBarra[this.index];
-            else if(this.title === "Patio")
-               data = this.getMesaPatio1[this.index];
-            else if(this.title === "")
-               data = this.getMesaPatio2[this.index];
-            else if(this.title === "Presidencial")
-               data = this.getMesaPresidencial[this.index];
-            else if(this.title === "Redonda")
-               data = this.getMesaRedonda[this.index];
-            else if(this.title === "Cuartito")
-               data = this.getMesaCuartito[this.index];
+            let http = null;
+            if(this.getIsOnline)
+               http = Vue.prototype.$http;
+            else
+               http = Vue.prototype.$httpLocal;
 
-            console.log("data", data);
-            this.$emit("updateCurrSaleItem", data);
-
-            // let http = null;
-            // if(this.getIsOnline)
-            //    http = Vue.prototype.$http;
-            // else
-            //    http = Vue.prototype.$httpLocal;
-
-            // // Get sale by "idTable"
-            // console.log("new_status", new_status);
-            // if(new_status == 2) {
-            //    let response = await http.post("Ventas/get_where", querystring.stringify({
-            //       status: 1,
-            //       idmesa: new_id
-            //    }), {
-            //       responseType: "text",
-            //       headers: {
-            //          "X-Requested-With": "XMLHttpRequest",
-            //          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
-            //       }
-            //    });
-            //    if(response) {
-            //       const data = response.data;
-            //       console.log("data", data);
-            //       if(data) {
-            //         this.$emit("updateCurrSaleItem", data);
-            //       } else {
-            //          this.$fire({
-            //             title: "Error",
-            //             text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
-            //             type: "error"
-            //          });
-            //          return;
-            //       }
-            //    } else {
-            //       this.$fire({
-            //          title: "Error",
-            //          text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
-            //          type: "error"
-            //       });
-            //       return;
-            //    }
-            // } else {
-            //    this.$emit("updateCurrSaleItem", {});
-            // }
+            // Get sale by "idTable"
+            console.log("new_status", new_status);
+            if(new_status == 2) {
+               let response = await http.post("Ventas/get_where", querystring.stringify({
+                  status: 1,
+                  idmesa: new_id
+               }), {
+                  responseType: "text",
+                  headers: {
+                     "X-Requested-With": "XMLHttpRequest",
+                     "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+                  }
+               });
+               if(response) {
+                  const data = response.data;
+                  console.log("data", data);
+                  if(data) {
+                    this.$emit("updateCurrSaleItem", data);
+                  } else {
+                     this.$fire({
+                        title: "Error",
+                        text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+                        type: "error"
+                     });
+                     return;
+                  }
+               } else {
+                  this.$fire({
+                     title: "Error",
+                     text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+                     type: "error"
+                  });
+                  return;
+               }
+            } else {
+               this.$emit("updateCurrSaleItem", {});
+            }
          }
 
          this.$emit("updateCurrSelectedItem", {

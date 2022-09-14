@@ -1,0 +1,303 @@
+warning: LF will be replaced by CRLF in src/plugins/store.js.
+The file will have its original line endings in your working directory
+warning: LF will be replaced by CRLF in src/views/Table.vue.
+The file will have its original line endings in your working directory
+warning: LF will be replaced by CRLF in src/views/components/table/TableItem.vue.
+The file will have its original line endings in your working directory
+warning: LF will be replaced by CRLF in src/views/components/table/TableItemContainer.vue.
+The file will have its original line endings in your working directory
+warning: LF will be replaced by CRLF in src/views/layout/Footer.vue.
+The file will have its original line endings in your working directory
+[1mdiff --git a/src/plugins/store.js b/src/plugins/store.js[m
+[1mindex 1d0e014..2396d39 100644[m
+[1m--- a/src/plugins/store.js[m
+[1m+++ b/src/plugins/store.js[m
+[36m@@ -4,12 +4,42 @@[m [mimport Vuex from "vuex";[m
+ Vue.use(Vuex);[m
+ const store = new Vuex.Store({[m
+    state: {[m
+[32m+[m[32m      mesa: {[m
+[32m+[m[32m         barra: [],[m
+[32m+[m[32m         cocina: [],[m
+[32m+[m[32m         cuartito: [],[m
+[32m+[m[32m         patio1: [],[m
+[32m+[m[32m         patio2: [],[m
+[32m+[m[32m         presidencial: [],[m
+[32m+[m[32m         redonda: [][m
+[32m+[m[32m      },[m
+       corte: {[m
+          last: null[m
+       },[m
+       is_online: true,[m
+    },[m
+    getters: {[m
+[32m+[m[32m      getMesaBarra(state) {[m
+[32m+[m[32m         return state.mesa.barra;[m
+[32m+[m[32m      },[m
+[32m+[m[32m      getMesaCocina(state) {[m
+[32m+[m[32m         return state.mesa.cocina;[m
+[32m+[m[32m      },[m
+[32m+[m[32m      getMesaCuartito(state) {[m
+[32m+[m[32m         return state.mesa.cuartito;[m
+[32m+[m[32m      },[m
+[32m+[m[32m      getMesaPatio1(state) {[m
+[32m+[m[32m         return state.mesa.patio1;[m
+[32m+[m[32m      },[m
+[32m+[m[32m      getMesaPatio2(state) {[m
+[32m+[m[32m         return state.mesa.patio2;[m
+[32m+[m[32m      },[m
+[32m+[m[32m      getMesaPresidencial(state) {[m
+[32m+[m[32m         return state.mesa.presidencial;[m
+[32m+[m[32m      },[m
+[32m+[m[32m      getMesaRedonda(state) {[m
+[32m+[m[32m         return state.mesa.redonda;[m
+[32m+[m[32m      },[m
+       getCorteLast(state) {[m
+          return state.corte.last;[m
+       },[m
+[36m@@ -18,6 +48,57 @@[m [mconst store = new Vuex.Store({[m
+       }[m
+    },[m
+    mutations: {[m
+[32m+[m[32m      SET_MESA_BARRA: (state, data) => {[m
+[32m+[m[32m         state.mesa.barra = data;[m
+[32m+[m[32m      },[m
+[32m+[m[32m      // SET_MESA_BARRA_DATA: (state, data) => {[m
+[32m+[m[32m      //    state.mesa.barra[data.index] = {[m
+[32m+[m[32m      //       cambio: data.cambio,[m
+[32m+[m[32m      //       comanda: data.comanda,[m
+[32m+[m[32m      //       corte_id: data.corte_id,[m
+[32m+[m[32m      //       cuanto_pago: data.cuanto_pago,[m
+[32m+[m[32m      //       fecha_final: data.fecha_final,[m
+[32m+[m[32m      //       hora_final: data.hora_final,[m
+[32m+[m[32m      //       hora_inicio: data.hora_inicio,[m
+[32m+[m[32m      //       idmesa: data.idmesa,[m
+[32m+[m[32m      //       idmesero: data.idmesero,[m
+[32m+[m[32m      //       idventa: data.idventa,[m
+[32m+[m[32m      //       is_sync: data.is_sync,[m
+[32m+[m[32m      //       mesa: data.mesa,[m
+[32m+[m[32m      //       mesero: data.mesero,[m
+[32m+[m[32m      //       metodo_pago: data.metodo_pago,[m
+[32m+[m[32m      //       monto_propina: data.monto_propina,[m
+[32m+[m[32m      //       personas: data.personas,[m
+[32m+[m[32m      //       porcentaje_propina: data.porcentaje_propina,[m
+[32m+[m[32m      //       propina: data.propina,[m
+[32m+[m[32m      //       status: data.status,[m
+[32m+[m[32m      //       total: data.total[m
+[32m+[m[32m      //    };[m
+[32m+[m[32m      // },[m
+[32m+[m[32m      // SET_MESA_BARRA_STATUS: (state, data) => {[m
+[32m+[m[32m      //    state.mesa.barra[data.index].status = data;[m
+[32m+[m[32m      // },[m
+[32m+[m[32m      SET_MESA_BARRA_COMANDA: (state, data) => {[m
+[32m+[m[32m         state.mesa.barra[data.index].comanda = data.comanda;[m
+[32m+[m[32m      },[m
+[32m+[m[32m      SET_MESA_COCINA: (state, data) => {[m
+[32m+[m[32m         state.mesa.cocina = data;[m
+[32m+[m[32m      },[m
+[32m+[m[32m      SET_MESA_CUARTITO: (state, data) => {[m
+[32m+[m[32m         state.mesa.cuartito = data;[m
+[32m+[m[32m      },[m
+[32m+[m[32m      SET_MESA_PATIO1: (state, data) => {[m
+[32m+[m[32m         state.mesa.patio1 = data;[m
+[32m+[m[32m      },[m
+[32m+[m[32m      SET_MESA_PATIO2: (state, data) => {[m
+[32m+[m[32m         state.mesa.patio2 = data;[m
+[32m+[m[32m      },[m
+[32m+[m[32m      SET_MESA_PRESIDENCIAL: (state, data) => {[m
+[32m+[m[32m         state.mesa.presidencial = data;[m
+[32m+[m[32m      },[m
+[32m+[m[32m      SET_MESA_REDONDA: (state, data) => {[m
+[32m+[m[32m         state.mesa.redonda = data;[m
+[32m+[m[32m      },[m
+       SET_CORTE_LAST: (state, data) => {[m
+          state.corte.last = data;[m
+       },[m
+[1mdiff --git a/src/views/Table.vue b/src/views/Table.vue[m
+[1mindex 765060d..3891082 100644[m
+[1m--- a/src/views/Table.vue[m
+[1m+++ b/src/views/Table.vue[m
+[36m@@ -166,6 +166,7 @@[m
+ <script>[m
+ import Vue from "vue";[m
+ import { mapGetters } from "vuex";[m
+[32m+[m[32mconst querystring = require("querystring");[m
+ import compHeader from "@/views/layout/Header.vue";[m
+ import compFooter from "@/views/layout/Footer.vue";[m
+ import compLeftContent from "@/views/layout/LeftContent.vue";[m
+[36m@@ -244,57 +245,55 @@[m [mexport default {[m
+          "getIsOnline"[m
+       ])[m
+    },[m
+[31m-   created() {[m
+[32m+[m[32m   async created() {[m
+       let http = null;[m
+       if(this.getIsOnline)[m
+          http = Vue.prototype.$http;[m
+       else[m
+          http = Vue.prototype.$httpLocal;[m
+ [m
+[31m-      const vue_this = this;[m
+[31m-      http.get("Rutes/venta_mesas")[m
+[31m-         .then(function (response) {[m
+[31m-            if(response) {[m
+[31m-               const data = response.data;[m
+[31m-               vue_this.data.table.data = data;[m
+[32m+[m[32m      let response = await http.get("Rutes/venta_mesas");[m
+[32m+[m[32m      if(response) {[m
+[32m+[m[32m         const data = response.data;[m
+[32m+[m[32m         this.data.table.data = data;[m
+ [m
+[31m-               //////////////////[m
+[31m-               // Setup tables //[m
+[31m-               vue_this.data.table.table.barra = vue_this.retrieveDataArray(data.mesasbarra, "nomesa");[m
+[31m-               vue_this.data.table.table.cocina = vue_this.retrieveDataArray(data.mesascocina, "nomesa");[m
+[31m-               vue_this.data.table.table.cuartito = vue_this.retrieveDataArray(data.mesascocuartito, "nomesa");[m
+[31m-               vue_this.data.table.table.patio.patio = vue_this.retrieveDataArray(data.mesaspatio, "nomesa");[m
+[31m-               vue_this.data.table.table.presidencial = vue_this.retrieveDataArray(data.mesasprecidencial, "nomesa");[m
+[31m-               vue_this.data.table.table.redonda = vue_this.retrieveDataArray(data.mesasredonda, "nomesa");[m
+[31m-               // Setup "patio" arrays[m
+[31m-               vue_this.data.table.table.patio.patio1.push(vue_this.data.table.table.patio.patio[0]);[m
+[31m-               vue_this.data.table.table.patio.patio1.push(vue_this.data.table.table.patio.patio[1]);[m
+[31m-               vue_this.data.table.table.patio.patio1.push(vue_this.data.table.table.patio.patio[2]);[m
+[31m-               vue_this.data.table.table.patio.patio2.push(vue_this.data.table.table.patio.patio[3]);[m
+[31m-               vue_this.data.table.table.patio.patio2.push(vue_this.data.table.table.patio.patio[4]);[m
+[32m+[m[32m         //////////////////[m
+[32m+[m[32m         // Setup tables //[m
+[32m+[m[32m         this.data.table.table.barra = this.retrieveDataArray(data.mesasbarra, "nomesa");[m
+[32m+[m[32m         this.data.table.table.cocina = this.retrieveDataArray(data.mesascocina, "nomesa");[m
+[32m+[m[32m         this.data.table.table.cuartito = this.retrieveDataArray(data.mesascocuartito, "nomesa");[m
+[32m+[m[32m         this.data.table.table.patio.patio = this.retrieveDataArray(data.mesaspatio, "nomesa");[m
+[32m+[m[32m         this.data.table.table.presidencial = this.retrieveDataArray(data.mesasprecidencial, "nomesa");[m
+[32m+[m[32m         this.data.table.table.redonda = this.retrieveDataArray(data.mesasredonda, "nomesa");[m
+[32m+[m[32m         // Setup "patio" arrays[m
+[32m+[m[32m         this.data.table.table.patio.patio1.push(this.data.table.table.patio.patio[0]);[m
+[32m+[m[32m         this.data.table.table.patio.patio1.push(this.data.table.table.patio.patio[1]);[m
+[32m+[m[32m         this.data.table.table.patio.patio1.push(this.data.table.table.patio.patio[2]);[m
+[32m+[m[32m         this.data.table.table.patio.patio2.push(this.data.table.table.patio.patio[3]);[m
+[32m+[m[32m         this.data.table.table.patio.patio2.push(this.data.table.table.patio.patio[4]);[m
+ [m
+[31m-               //////////////////[m
+[31m-               // Setup status //[m
+[31m-               vue_this.data.table.status.barra = vue_this.retrieveDataArray(data.mesasbarra, "status");[m
+[31m-               vue_this.data.table.status.cocina = vue_this.retrieveDataArray(data.mesascocina, "status");[m
+[31m-               vue_this.data.table.status.cuartito = vue_this.retrieveDataArray(data.mesascocuartito, "status");[m
+[31m-               vue_this.data.table.status.patio.patio = vue_this.retrieveDataArray(data.mesaspatio, "status");[m
+[31m-               vue_this.data.table.status.presidencial = vue_this.retrieveDataArray(data.mesasprecidencial, "status");[m
+[31m-               vue_this.data.table.status.redonda = vue_this.retrieveDataArray(data.mesasredonda, "status");[m
+[31m-               // Setup "patio" arrays[m
+[31m-               vue_this.data.table.status.patio.patio1.push(vue_this.data.table.status.patio.patio[0]);[m
+[31m-               vue_this.data.table.status.patio.patio1.push(vue_this.data.table.status.patio.patio[1]);[m
+[31m-               vue_this.data.table.status.patio.patio1.push(vue_this.data.table.status.patio.patio[2]);[m
+[31m-               vue_this.data.table.status.patio.patio2.push(vue_this.data.table.status.patio.patio[3]);[m
+[31m-               vue_this.data.table.status.patio.patio2.push(vue_this.data.table.status.patio.patio[4]);[m
+[31m-            } else {[m
+[31m-               this.$fire({[m
+[31m-                  title: "Error",[m
+[31m-                  text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",[m
+[31m-                  type: "error"[m
+[31m-               });[m
+[31m-            }[m
+[32m+[m[32m         //////////////////[m
+[32m+[m[32m         // Setup status //[m
+[32m+[m[32m         this.data.table.status.barra = this.retrieveDataArray(data.mesasbarra, "status");[m
+[32m+[m[32m         this.data.table.status.cocina = this.retrieveDataArray(data.mesascocina, "status");[m
+[32m+[m[32m         this.data.table.status.cuartito = this.retrieveDataArray(data.mesascocuartito, "status");[m
+[32m+[m[32m         this.data.table.status.patio.patio = this.retrieveDataArray(data.mesaspatio, "status");[m
+[32m+[m[32m         this.data.table.status.presidencial = this.retrieveDataArray(data.mesasprecidencial, "status");[m
+[32m+[m[32m         this.data.table.status.redonda = this.retrieveDataArray(data.mesasredonda, "status");[m
+[32m+[m[32m         // Setup "patio" arrays[m
+[32m+[m[32m         this.data.table.status.patio.patio1.push(this.data.table.status.patio.patio[0]);[m
+[32m+[m[32m         this.data.table.status.patio.patio1.push(this.data.table.status.patio.patio[1]);[m
+[32m+[m[32m         this.data.table.status.patio.patio1.push(this.data.table.status.patio.patio[2]);[m
+[32m+[m[32m         this.data.table.status.patio.patio2.push(this.data.table.status.patio.patio[3]);[m
+[32m+[m[32m         this.data.table.status.patio.patio2.push(this.data.table.status.patio.patio[4]);[m
+[32m+[m[32m      } else {[m
+[32m+[m[32m         this.$fire({[m
+[32m+[m[32m            title: "Error",[m
+[32m+[m[32m            text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",[m
+[32m+[m[32m            type: "error"[m
+          });[m
+[32m+[m[32m      }[m
+[32m+[m[32m      this.retrieveAllMesasData();[m
+    },[m
+    methods: {[m
+       updateCurrSelected(newTableData) {[m
+[36m@@ -322,8 +321,90 @@[m [mexport default {[m
+       removeOrderComanda(index) {[m
+          this.data.table.selected.curr_sale.comanda.splice(index, 1);[m
+       },[m
+[32m+[m[32m      async retrieveMesaData(id_mesa) {[m
+[32m+[m[32m         let http = null;[m
+[32m+[m[32m         if(this.getIsOnline)[m
+[32m+[m[32m            http = Vue.prototype.$http;[m
+[32m+[m[32m         else[m
+[32m+[m[32m            http = Vue.prototype.$httpLocal;[m
+[32m+[m
+[32m+[m[32m         let response = await http.post("Ventas/get_where", querystring.stringify({[m
+[32m+[m[32m            status: 1,[m
+[32m+[m[32m            idmesa: id_mesa[m
+[32m+[m[32m         }), {[m
+[32m+[m[32m            responseType: "text",[m
+[32m+[m[32m            headers: {[m
+[32m+[m[32m               "X-Requested-With": "XMLHttpRequest",[m
+[32m+[m[32m               "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"[m
+[32m+[m[32m            }[m
+[32m+[m[32m         });[m
+[32m+[m[32m         if(response) {[m
+[32m+[m[32m            const data = response.data;[m
+[32m+[m[32m            if(data)[m
+[32m+[m[32m               return data;[m
+[32m+[m[32m            else[m
+[32m+[m[32m               return {};[m
+[32m+[m[32m         } else {[m
+[32m+[m[32m            this.$fire({[m
+[32m+[m[32m               title: "Error",[m
+[32m+[m[32m               text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",[m
+[32m+[m[32m               type: "error"[m
+[32m+[m[32m            });[m
+[32m+[m[32m            return {};[m
+[32m+[m[32m         }[m
+[32m+[m[32m      },[m
+       ///////////////[m
+       // Functions //[m
+[32m+[m[32m      async retrieveAllMesasData() {[m
+[32m+[m[32m         let barra_data = [];[m
+[32m+[m[32m         for(let i = 0; i < this.data.table.id_table.barra.length; i++) {[m
+[32m+[m[32m            const curr_id = this.data.table.id_table.barra[i];[m
+[32m+[m[32m            barra_data.push(await this.retrieveMesaData(curr_id));[m
+[32m+[m[32m         }[m
+[32m+[m[32m         this.$store.commit("SET_MESA_BARRA", barra_data);[m
+[32m+[m
+[32m+[m[32m         let cocina_data = [];[m
+[32m+[m[32m         for(let i = 0; i < this.data.table.id_table.cocina.length; i++) {[m
+[32m+[m[32m            const curr_id = this.data.table.id_table.cocina[i];[m
+[32m+[m[32m            cocina_data.push(await this.retrieveMesaData(curr_id));[m
+[32m+[m[32m         }[m
+[32m+[m[32m         this.$store.commit("SET_MESA_COCINA", cocina_data);[m
+[32m+[m
+[32m+[m[32m         let cuartito_data = [];[m
+[32m+[m[32m         for(let i = 0; i < this.data.table.id_table.cuartito.length; i++) {[m
+[32m+[m[32m            const curr_id = this.data.table.id_table.cuartito[i];[m
+[32m+[m[32m            cuartito_data.push(await this.retrieveMesaData(curr_id));[m
+[32m+[m[32m         }[m
+[32m+[m[32m         this.$store.commit("SET_MESA_CUARTITO", cuartito_data);[m
+[32m+[m
+[32m+[m[32m         let patio1_data = [];[m
+[32m+[m[32m         for(let i = 0; i < this.data.table.id_table.patio.patio1.length; i++) {[m
+[32m+[m[32m            const curr_id = this.data.table.id_table.patio.patio1[i];[m
+[32m+[m[32m            patio1_data.push(await this.retrieveMesaData(curr_id));[m
+[32m+[m[32m         }[m
+[32m+[m[32m         this.$store.commit("SET_MESA_PATIO1", patio1_data);[m
+[32m+[m
+[32m+[m[32m         let patio2_data = [];[m
+[32m+[m[32m         for(let i = 0; i < this.data.table.id_table.patio.patio2.length; i++) {[m
+[32m+[m[32m            const curr_id = this.data.table.id_table.patio.patio2[i];[m
+[32m+[m[32m            patio2_data.push(await this.retrieveMesaData(curr_id));[m
+[32m+[m[32m         }[m
+[32m+[m[32m         this.$store.commit("SET_MESA_PATIO2", patio2_data);[m
+[32m+[m
+[32m+[m[32m         let presidencial_data = [];[m
+[32m+[m[32m         for(let i = 0; i < this.data.table.id_table.presidencial.length; i++) {[m
+[32m+[m[32m            const curr_id = this.data.table.id_table.presidencial[i];[m
+[32m+[m[32m            presidencial_data.push(await thi

@@ -18,6 +18,8 @@
                      :statusTable="data.statusTables[index][index2]"
                      :noTable="data.noTables[index][index2]"
                      :currIdSelected="currIdSelected"
+                     :index="index2"
+                     :title="data.title[index]"
                      @updateCurrSaleItem="updateCurrSaleItem"
                      @updateCurrSelectedItem="updateCurrSelectedItem"
                   >
@@ -32,7 +34,6 @@
 
 <script>
 import compTableItem from "@/views/components/table/TableItem.vue";
-
 export default {
    components: {
       TableItemElem: compTableItem

@@ -5,7 +5,7 @@
             <h4>
                Elcanterero Restaurante 2022 v0.2.47
                <span :style="[getIsOnline ? { color: 'green' } : { color: 'red' }]" style="margin-left: 10px;">({{ (getIsOnline) ? "Online" : "Offline" }})</span>
-               <button :disabled="!getIsOnline" style="margin-left: 10px;" class="btn btn-sm btn-primary" @click="onRefreshItems">Actualizar registros offline</button>
+               <!-- <button :disabled="!getIsOnline" style="margin-left: 10px;" class="btn btn-sm btn-primary" @click="onRefreshItems">Actualizar registros offline</button> -->
             </h4>
          </div>
       </div>
@@ -25,13 +25,13 @@ export default {
          "getIsOnline"
       ])
    },
-   created() {
-      if(this.getIsOnline) {
-         setTimeout(function() {
-            this.onRefreshItems();
-         }.bind(this), 1000);
-      }
-   },
+   // created() {
+   //    if(this.getIsOnline) {
+   //       setTimeout(function() {
+   //          this.onRefreshItems();
+   //       }.bind(this), 1000);
+   //    }
+   // },
    methods: {
       async onRefreshItems() {
          let data = {};

@@ -166,6 +166,7 @@
 <script>
 import Vue from "vue";
 import { mapGetters } from "vuex";
+const querystring = require("querystring");
 import compHeader from "@/views/layout/Header.vue";
 import compFooter from "@/views/layout/Footer.vue";
 import compLeftContent from "@/views/layout/LeftContent.vue";
@@ -244,57 +245,55 @@ export default {
          "getIsOnline"
       ])
    },
-   created() {
+   async created() {
       let http = null;
       if(this.getIsOnline)
          http = Vue.prototype.$http;
       else
          http = Vue.prototype.$httpLocal;
 
-      const vue_this = this;
-      http.get("Rutes/venta_mesas")
-         .then(function (response) {
-            if(response) {
-               const data = response.data;
-               vue_this.data.table.data = data;
+      let response = await http.get("Rutes/venta_mesas");
+      if(response) {
+         const data = response.data;
+         this.data.table.data = data;
 
-               //////////////////
-               // Setup tables //
-               vue_this.data.table.table.barra = vue_this.retrieveDataArray(data.mesasbarra, "nomesa");
-               vue_this.data.table.table.cocina = vue_this.retrieveDataArray(data.mesascocina, "nomesa");
-               vue_this.data.table.table.cuartito = vue_this.retrieveDataArray(data.mesascocuartito, "nomesa");
-               vue_this.data.table.table.patio.patio = vue_this.retrieveDataArray(data.mesaspatio, "nomesa");
-               vue_this.data.table.table.presidencial = vue_this.retrieveDataArray(data.mesasprecidencial, "nomesa");
-               vue_this.data.table.table.redonda = vue_this.retrieveDataArray(data.mesasredonda, "nomesa");
-               // Setup "patio" arrays
-               vue_this.data.table.table.patio.patio1.push(vue_this.data.table.table.patio.patio[0]);
-               vue_this.data.table.table.patio.patio1.push(vue_this.data.table.table.patio.patio[1]);
-               vue_this.data.table.table.patio.patio1.push(vue_this.data.table.table.patio.patio[2]);
-               vue_this.data.table.table.patio.patio2.push(vue_this.data.table.table.patio.patio[3]);
-               vue_this.data.table.table.patio.patio2.push(vue_this.data.table.table.patio.patio[4]);
+         //////////////////
+         // Setup tables //
+         this.data.table.table.barra = this.retrieveDataArray(data.mesasbarra, "nomesa");
+         this.data.table.table.cocina = this.retrieveDataArray(data.mesascocina, "nomesa");
+         this.data.table.table.cuartito = this.retrieveDataArray(data.mesascocuartito, "nomesa");
+         this.data.table.table.patio.patio = this.retrieveDataArray(data.mesaspatio, "nomesa");
+         this.data.table.table.presidencial = this.retrieveDataArray(data.mesasprecidencial, "nomesa");
+         this.data.table.table.redonda = this.retrieveDataArray(data.mesasredonda, "nomesa");
+         // Setup "patio" arrays
+         this.data.table.table.patio.patio1.push(this.data.table.table.patio.patio[0]);
+         this.data.table.table.patio.patio1.push(this.data.table.table.patio.patio[1]);
+         this.data.table.table.patio.patio1.push(this.data.table.table.patio.patio[2]);
+         this.data.table.table.patio.patio2.push(this.data.table.table.patio.patio[3]);
+         this.data.table.table.patio.patio2.push(this.data.table.table.patio.patio[4]);
 
-               //////////////////
-               // Setup status //
-               vue_this.data.table.status.barra = vue_this.retrieveDataArray(data.mesasbarra, "status");
-               vue_this.data.table.status.cocina = vue_this.retrieveDataArray(data.mesascocina, "status");
-               vue_this.data.table.status.cuartito = vue_this.retrieveDataArray(data.mesascocuartito, "status");
-               vue_this.data.table.status.patio.patio = vue_this.retrieveDataArray(data.mesaspatio, "status");
-               vue_this.data.table.status.presidencial = vue_this.retrieveDataArray(data.mesasprecidencial, "status");
-               vue_this.data.table.status.redonda = vue_this.retrieveDataArray(data.mesasredonda, "status");
-               // Setup "patio" arrays
-               vue_this.data.table.status.patio.patio1.push(vue_this.data.table.status.patio.patio[0]);
-               vue_this.data.table.status.patio.patio1.push(vue_this.data.table.status.patio.patio[1]);
-               vue_this.data.table.status.patio.patio1.push(vue_this.data.table.status.patio.patio[2]);
-               vue_this.data.table.status.patio.patio2.push(vue_this.data.table.status.patio.patio[3]);
-               vue_this.data.table.status.patio.patio2.push(vue_this.data.table.status.patio.patio[4]);
-            } else {
-               this.$fire({
-                  title: "Error",
-                  text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
-                  type: "error"
-               });
-            }
+         //////////////////
+         // Setup status //
+         this.data.table.status.barra = this.retrieveDataArray(data.mesasbarra, "status");
+         this.data.table.status.cocina = this.retrieveDataArray(data.mesascocina, "status");
+         this.data.table.status.cuartito = this.retrieveDataArray(data.mesascocuartito, "status");
+         this.data.table.status.patio.patio = this.retrieveDataArray(data.mesaspatio, "status");
+         this.data.table.status.presidencial = this.retrieveDataArray(data.mesasprecidencial, "status");
+         this.data.table.status.redonda = this.retrieveDataArray(data.mesasredonda, "status");
+         // Setup "patio" arrays
+         this.data.table.status.patio.patio1.push(this.data.table.status.patio.patio[0]);
+         this.data.table.status.patio.patio1.push(this.data.table.status.patio.patio[1]);
+         this.data.table.status.patio.patio1.push(this.data.table.status.patio.patio[2]);
+         this.data.table.status.patio.patio2.push(this.data.table.status.patio.patio[3]);
+         this.data.table.status.patio.patio2.push(this.data.table.status.patio.patio[4]);
+      } else {
+         this.$fire({
+            title: "Error",
+            text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+            type: "error"
          });
+      }
+      this.retrieveAllMesasData();
    },
    methods: {
       updateCurrSelected(newTableData) {
@@ -322,8 +321,90 @@ export default {
       removeOrderComanda(index) {
          this.data.table.selected.curr_sale.comanda.splice(index, 1);
       },
+      async retrieveMesaData(id_mesa) {
+         let http = null;
+         if(this.getIsOnline)
+            http = Vue.prototype.$http;
+         else
+            http = Vue.prototype.$httpLocal;
+
+         let response = await http.post("Ventas/get_where", querystring.stringify({
+            status: 1,
+            idmesa: id_mesa
+         }), {
+            responseType: "text",
+            headers: {
+               "X-Requested-With": "XMLHttpRequest",
+               "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+            }
+         });
+         if(response) {
+            const data = response.data;
+            if(data)
+               return data;
+            else
+               return {};
+         } else {
+            this.$fire({
+               title: "Error",
+               text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+               type: "error"
+            });
+            return {};
+         }
+      },
       ///////////////
       // Functions //
+      async retrieveAllMesasData() {
+         let barra_data = [];
+         for(let i = 0; i < this.data.table.id_table.barra.length; i++) {
+            const curr_id = this.data.table.id_table.barra[i];
+            barra_data.push(await this.retrieveMesaData(curr_id));
+         }
+         this.$store.commit("SET_MESA_BARRA", barra_data);
+
+         let cocina_data = [];
+         for(let i = 0; i < this.data.table.id_table.cocina.length; i++) {
+            const curr_id = this.data.table.id_table.cocina[i];
+            cocina_data.push(await this.retrieveMesaData(curr_id));
+         }
+         this.$store.commit("SET_MESA_COCINA", cocina_data);
+
+         let cuartito_data = [];
+         for(let i = 0; i < this.data.table.id_table.cuartito.length; i++) {
+            const curr_id = this.data.table.id_table.cuartito[i];
+            cuartito_data.push(await this.retrieveMesaData(curr_id));
+         }
+         this.$store.commit("SET_MESA_CUARTITO", cuartito_data);
+
+         let patio1_data = [];
+         for(let i = 0; i < this.data.table.id_table.patio.patio1.length; i++) {
+            const curr_id = this.data.table.id_table.patio.patio1[i];
+            patio1_data.push(await this.retrieveMesaData(curr_id));
+         }
+         this.$store.commit("SET_MESA_PATIO1", patio1_data);
+
+         let patio2_data = [];
+         for(let i = 0; i < this.data.table.id_table.patio.patio2.length; i++) {
+            const curr_id = this.data.table.id_table.patio.patio2[i];
+            patio2_data.push(await this.retrieveMesaData(curr_id));
+         }
+         this.$store.commit("SET_MESA_PATIO2", patio2_data);
+
+         let presidencial_data = [];
+         for(let i = 0; i < this.data.table.id_table.presidencial.length; i++) {
+            const curr_id = this.data.table.id_table.presidencial[i];
+            presidencial_data.push(await this.retrieveMesaData(curr_id));
+         }
+         this.$store.commit("SET_MESA_PRESIDENCIAL", presidencial_data);
+
+         let redonda_data = [];
+         for(let i = 0; i < this.data.table.id_table.redonda.length; i++) {
+            const curr_id = this.data.table.id_table.redonda[i];
+            redonda_data.push(await this.retrieveMesaData(curr_id));
+         }
+         this.$store.commit("SET_MESA_REDONDA", redonda_data);
+      },
       findFieldById(id) {
          let finded = {
             index: -1,
