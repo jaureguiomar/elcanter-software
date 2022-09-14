@@ -49,6 +49,7 @@ export default {
    },
    computed: {
       ...mapGetters([
+         "getCorteLast",
          "getIsOnline"
       ])
    },
@@ -63,47 +64,28 @@ export default {
             return;
          }
 
+         // Get last valid "corte"
+         if(!this.getCorteLast) {
+            this.$fire({
+               title: "Error",
+               text: "No hay corte iniciado.",
+               type: "error"
+            });
+            return;
+         }
+
          let http = null;
          if(this.getIsOnline)
             http = Vue.prototype.$http;
          else
             http = Vue.prototype.$httpLocal;
 
-         //////////////////////////////
-         // Validate if "corte" open //
-         // Get last valid "corte"
-         let response = null;
-         let last_corte_id = null;
-         response = await http.post("Cortes/get_last", {},
-            {
-               responseType: "text",
-               headers: {
-                  "X-Requested-With": "XMLHttpRequest",
-                  "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
-               }
-            }
-         );
-         if(response) {
-            const data = response.data;
-            last_corte_id = data["id"];
-         } else {
-            this.$fire({
-               title: "Error",
-               text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
-               type: "error"
-            });
-            return;
-         }
-         //////////////////////////////
-         //////////////////////////////
-
          // Insert order
          let id_order = -1;
-         response = null;
-         response = await http.post("Pedidos/insert", querystring.stringify({
+         let response = await http.post("Pedidos/insert", querystring.stringify({
             status: 1,
             idmesero: this.idmesero,
-            corte_id: last_corte_id
+            corte_id: this.getCorteLast["id"]
          }),
          {
             responseType: "text",

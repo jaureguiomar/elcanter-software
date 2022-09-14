@@ -108,8 +108,6 @@ export default {
             return;
          }
 
-         //////////////////////////////
-         // Validate if "corte" open //
          // Get last valid "corte"
          if(!this.getCorteLast) {
             this.$fire({
