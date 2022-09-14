@@ -270,8 +270,9 @@ export default {
       ])
    },
    async created() {
+      this.retrieveAllMesasData();
       if(!this.getMesaBakup) {
-         this.retrieveAllMesasData();
+         this.retrieveAllSalesData();
          this.$store.commit("SET_MESA_BAKUP", true);
       }
    },
@@ -337,18 +338,11 @@ export default {
       },
       onRefreshTables() {
          this.retrieveAllMesasData();
+         this.retrieveAllSalesData();
       },
       ///////////////
       // Functions //
       async retrieveAllMesasData() {
-         // Reset global data
-         this.data.table.selected.id = -1;
-         this.data.table.selected.status = -1;
-         this.data.table.selected.no_table = -1;
-         this.data.table.selected.title = null;
-         this.data.table.selected.index = -1;
-         this.data.table.selected.curr_sale = {};
-
          // Reset mesas data
          this.data.table.table.patio.patio1 = [];
          this.data.table.table.patio.patio1 = [];
@@ -410,8 +404,17 @@ export default {
                type: "error"
             });
          }
+      },
+      async retrieveAllSalesData() {
+         // Reset global data
+         this.data.table.selected.id = -1;
+         this.data.table.selected.status = -1;
+         this.data.table.selected.no_table = -1;
+         this.data.table.selected.title = null;
+         this.data.table.selected.index = -1;
+         this.data.table.selected.curr_sale = {};
 
-         // Reset ventas datat
+         // Reset ventas data
          this.$store.commit("SET_MESA_BARRA", []);
          this.$store.commit("SET_MESA_COCINA", []);
          this.$store.commit("SET_MESA_CUARTITO", []);
