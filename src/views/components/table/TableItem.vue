@@ -114,23 +114,30 @@ export default {
             new_id = this.idTable;
             new_status = this.statusTable;
             new_no_table = this.noTable;
-            new_title = this.title;
             new_index = this.index;
 
-            if(this.title === "Cocina")
+            if(this.title === "Cocina") {
                data = this.getMesaCocina[this.index];
-            else if(this.title === "Barra")
+               new_title = "cocina";
+            } else if(this.title === "Barra") {
                data = this.getMesaBarra[this.index];
-            else if(this.title === "Patio")
+               new_title = "barra";
+            } else if(this.title === "Patio") {
                data = this.getMesaPatio1[this.index];
-            else if(this.title === "")
+               new_title = "patio1";
+            } else if(this.title === "") {
                data = this.getMesaPatio2[this.index];
-            else if(this.title === "Presidencial")
+               new_title = "patio2";
+            } else if(this.title === "Presidencial") {
                data = this.getMesaPresidencial[this.index];
-            else if(this.title === "Redonda")
+               new_title = "presidencial";
+            } else if(this.title === "Redonda") {
                data = this.getMesaRedonda[this.index];
-            else if(this.title === "Cuartito")
+               new_title = "redonda";
+            } else if(this.title === "Cuartito") {
                data = this.getMesaCuartito[this.index];
+               new_title = "cuartito";
+            }
          }
 
          this.$emit("updateCurrSaleItem", data);

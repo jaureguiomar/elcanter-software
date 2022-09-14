@@ -191,6 +191,8 @@
                            v-if="table.selected > 0 && !data.new_sale"
                            :data="data.curr_sale"
                            type="table"
+                           :title="data.title"
+                           :index="data.index"
                            @updateOrder="updateSale"
                            @updateOrderField="updateSaleField"
                            @updateOrderComandaField="updateSaleComandaField"
@@ -231,7 +233,9 @@ export default {
             sale: [],
             curr_sale: {},
             curr_sale_index: -1,
-            new_sale: false
+            new_sale: false,
+            title: null,
+            index: -1
          },
          table: {
             selected: -1,
@@ -413,6 +417,24 @@ export default {
                .then(function (response) {
                   if(response) {
                      const data = response.data;
+
+                     if(data.mesa.croquis === "Cocina")
+                        vue_this.data.title = "cocina";
+                     else if(data.mesa.croquis === "Patio")
+                        if(data.mesa.nomesa == 1 || data.mesa.nomesa == 2 || data.mesa.nomesa == 3)
+                           vue_this.data.title = "patio1";
+                        else
+                           vue_this.data.title = "patio2";
+                     else if(data.mesa.croquis === "Presidencial")
+                        vue_this.data.title = "presidencial";
+                     else if(data.mesa.croquis === "Redonda")
+                        vue_this.data.title = "redonda";
+                     else if(data.mesa.croquis === "Cuartito")
+                        vue_this.data.title = "cuartito";
+                     else if(data.mesa.croquis === "Barra")
+                        vue_this.data.title = "barra";
+                     vue_this.data.index = parseInt(data.mesa.nomesa) - 1;
+
                      vue_this.data.curr_sale = data;
                      vue_this.data.curr_sale_index = index;
                   } else {

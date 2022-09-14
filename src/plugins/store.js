@@ -118,7 +118,7 @@ const store = new Vuex.Store({
             idmesa: data.idmesa,
             idmesero: data.idmesero,
             idventa: data.idventa,
-            is_sync: data.is_sync,
+            // is_sync: data.is_sync,
             mesa: data.mesa,
             mesero: data.mesero,
             metodo_pago: data.metodo_pago,
@@ -128,6 +128,18 @@ const store = new Vuex.Store({
             propina: data.propina,
             status: data.status,
             total: data.total
+         };
+      },
+      SET_MESA_DATA_COMANDA_BY_INDEX: (state, data) => {
+         state.mesa[data.key][data.index].comanda[data.comanda_index] = { ...data.data[data.comanda_index] };
+      },
+      SET_MESA_DATA_REMOVE_COMANDA_BY_INDEX: (state, data) => {
+         state.mesa[data.key][data.index].comanda.splice(data.comanda_index, 1);
+      },
+      SET_MESA_DATA_COMANDA_SUBTOTAL_MODIFICADO_BY_INDEX: (state, data) => {
+         state.mesa[data.key][data.index].comanda[data.comanda_index] = {
+            ...state.mesa[data.key][data.index].comanda[data.comanda_index],
+            subtotal_modificado: data.subtotal_modificado
          };
       },
       SET_MESA_BAKUP: (state, data) => {
