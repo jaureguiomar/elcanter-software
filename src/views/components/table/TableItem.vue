@@ -34,23 +34,20 @@
 </template>
 
 <script>
-// import Vue from "vue";
 import { mapGetters } from "vuex";
-// const querystring = require("querystring");
-
 export default {
    props: {
       idTable: {
          type: Number,
-         required: false
+         required: true
       },
       statusTable: {
          type: Number,
-         required: false
+         required: true
       },
       noTable: {
          type: Number,
-         required: false
+         required: true
       },
       currIdSelected: {
          type: Number,
@@ -58,7 +55,8 @@ export default {
       },
       fontSize: {
          type: Number,
-         required: false
+         required: false,
+         default: 0
       },
       index: {
          type: Number,
@@ -91,7 +89,6 @@ export default {
          let new_status = -1;
          let no_table = -1;
 
-         // Get last valid "corte"
          if(!this.getCorteLast) {
             this.$fire({
                title: "Error",
@@ -110,20 +107,12 @@ export default {
             }
          }
 
-         // console.log("adnioanido");
-         // console.log("this.idTable", this.idTable);
-         // console.log("this.currIdSelected", this.currIdSelected);
-         if(this.idTable == this.currIdSelected) {
-            new_id = -1;
-            new_status = -1;
-            no_table = -1;
-            this.$emit("updateCurrSaleItem", {});
-         } else {
+         let data = {};
+         if(this.idTable != this.currIdSelected) {
             new_id = this.idTable;
             new_status = this.statusTable;
             no_table = this.noTable;
 
-            let data = null;
             if(this.title === "Cocina")
                data = this.getMesaCocina[this.index];
             else if(this.title === "Barra")
@@ -138,55 +127,9 @@ export default {
                data = this.getMesaRedonda[this.index];
             else if(this.title === "Cuartito")
                data = this.getMesaCuartito[this.index];
-
-            console.log("data", data);
-            this.$emit("updateCurrSaleItem", data);
-
-            // let http = null;
-            // if(this.getIsOnline)
-            //    http = Vue.prototype.$http;
-            // else
-            //    http = Vue.prototype.$httpLocal;
-
-            // // Get sale by "idTable"
-            // console.log("new_status", new_status);
-            // if(new_status == 2) {
-            //    let response = await http.post("Ventas/get_where", querystring.stringify({
-            //       status: 1,
-            //       idmesa: new_id
-            //    }), {
-            //       responseType: "text",
-            //       headers: {
-            //          "X-Requested-With": "XMLHttpRequest",
-            //          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
-            //       }
-            //    });
-            //    if(response) {
-            //       const data = response.data;
-            //       console.log("data", data);
-            //       if(data) {
-            //         this.$emit("updateCurrSaleItem", data);
-            //       } else {
-            //          this.$fire({
-            //             title: "Error",
-            //             text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
-            //             type: "error"
-            //          });
-            //          return;
-            //       }
-            //    } else {
-            //       this.$fire({
-            //          title: "Error",
-            //          text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
-            //          type: "error"
-            //       });
-            //       return;
-            //    }
-            // } else {
-            //    this.$emit("updateCurrSaleItem", {});
-            // }
          }
 
+         this.$emit("updateCurrSaleItem", data);
          this.$emit("updateCurrSelectedItem", {
             id: new_id,
             status: new_status,
