@@ -11,7 +11,8 @@ const store = new Vuex.Store({
          patio1: [],
          patio2: [],
          presidencial: [],
-         redonda: []
+         redonda: [],
+         bakup: false
       },
       corte: {
          last: null
@@ -36,6 +37,9 @@ const store = new Vuex.Store({
       },
       getMesaPresidencial(state) {
          return state.mesa.presidencial;
+      },
+      getMesaBakup(state) {
+         return state.mesa.bakup;
       },
       getMesaRedonda(state) {
          return state.mesa.redonda;
@@ -122,6 +126,9 @@ const store = new Vuex.Store({
             status: data.status,
             total: data.total
          };
+      },
+      SET_MESA_BAKUP: (state, data) => {
+         state.mesa.bakup = data;
       },
       SET_CORTE_LAST: (state, data) => {
          state.corte.last = data;

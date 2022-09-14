@@ -253,6 +253,7 @@ export default {
    },
    computed: {
       ...mapGetters([
+         "getMesaBakup",
          "getIsOnline"
       ])
    },
@@ -304,7 +305,11 @@ export default {
             type: "error"
          });
       }
-      this.retrieveAllMesasData();
+
+      if(!this.getMesaBakup) {
+         this.retrieveAllMesasData();
+         this.$store.commit("SET_MESA_BAKUP", true);
+      }
    },
    methods: {
       updateCurrSelected(newTableData) {
