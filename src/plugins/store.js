@@ -4,6 +4,9 @@ import Vuex from "vuex";
 Vue.use(Vuex);
 const store = new Vuex.Store({
    state: {
+      // table: {
+      //    curr_selected
+      // },
       mesa: {
          barra: [],
          cocina: [],

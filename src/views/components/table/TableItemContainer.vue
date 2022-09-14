@@ -10,21 +10,36 @@
                   <p>{{ data.title[index] }}</p>
                </div>
                <div :class="data.typeContainer[index]">
-                  <TableItemElem
-                     v-for="(tmp_no_table, index2) in data.noTables[index]"
-                     :key="index2"
-                     :fontSize="data.fontTables[index][index2]"
-                     :idTable="data.idTables[index][index2]"
-                     :statusTable="data.statusTables[index][index2]"
-                     :noTable="data.noTables[index][index2]"
-                     :currIdSelected="currIdSelected"
-                     :index="index2"
-                     :title="data.title[index]"
-                     @updateCurrSaleItem="updateCurrSaleItem"
-                     @updateCurrSelectedItem="updateCurrSelectedItem"
+                  <Fragment
+                     v-if="
+                        (
+                           data.data[0].length === 3 &&
+                           data.data[0][0].length > 0 &&
+                           data.data[0][1].length > 0 &&
+                           data.data[0][2].length > 0
+                        ) ||
+                        (
+                           data.data[0].length > 0 &&
+                           !Array.isArray(data.data[0][0])
+                        )
+                     "
                   >
-                     <template #no-table>{{ index2 + 1 }}</template>
-                  </TableItemElem>
+                     <TableItemElem
+                        v-for="(tmp_no_table, index2) in data.noTables[index]"
+                        :key="index2"
+                        :fontSize="data.fontTables[index][index2]"
+                        :idTable="data.idTables[index][index2]"
+                        :statusTable="data.statusTables[index][index2]"
+                        :noTable="data.noTables[index][index2]"
+                        :currIdSelected="currIdSelected"
+                        :index="index2"
+                        :title="data.title[index]"
+                        @updateCurrSaleItem="updateCurrSaleItem"
+                        @updateCurrSelectedItem="updateCurrSelectedItem"
+                     >
+                        <template #no-table>{{ index2 + 1 }}</template>
+                     </TableItemElem>
+                  </Fragment>
                </div>
             </div>
          </div>
@@ -33,10 +48,13 @@
 </template>
 
 <script>
+import { Fragment } from "vue-fragment";
 import compTableItem from "@/views/components/table/TableItem.vue";
+
 export default {
    components: {
-      TableItemElem: compTableItem
+      TableItemElem: compTableItem,
+      Fragment
    },
    props: {
       data: {

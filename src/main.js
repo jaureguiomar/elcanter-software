@@ -13,6 +13,7 @@ import "@/plugins/bootstrap";
 import "@/plugins/font-awesome";
 import "@/plugins/simple-alert";
 import "@/plugins/internet-checker";
+import "@/plugins/fragment";
 // Global Template styles
 import "@/assets/scss/styles.scss";
 
