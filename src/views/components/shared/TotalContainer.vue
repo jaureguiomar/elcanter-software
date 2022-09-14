@@ -414,11 +414,13 @@ export default {
       },
       title: {
          type: String,
-         required: true
+         required: false,
+         default: null
       },
       index: {
          type: Number,
-         required: true
+         required: false,
+         default: -1
       }
    },
    data() {
@@ -501,14 +503,16 @@ export default {
                      });
                      vue_this.comanda_price[index].subtotal = new_subtotal;
 
-                     vue_this.$store.commit("SET_MESA_DATA_COMANDA_BY_INDEX", {
-                        data: [ ...vue_this.data.comanda ],
-                        cantidad: quantity,
-                        subtotal: new_subtotal,
-                        key: vue_this.title,
-                        index: vue_this.index,
-                        comanda_index: index
-                     });
+                     if(vue_this.type === "table") {
+                        vue_this.$store.commit("SET_MESA_DATA_COMANDA_BY_INDEX", {
+                           data: [ ...vue_this.data.comanda ],
+                           cantidad: quantity,
+                           subtotal: new_subtotal,
+                           key: vue_this.title,
+                           index: vue_this.index,
+                           comanda_index: index
+                        });
+                     }
                   } else {
                      vue_this.$fire({
                         title: "Error",
@@ -562,12 +566,14 @@ export default {
                            value: curr_comanda_price.subtotal_modificado
                         });
 
-                        vue_this.$store.commit("SET_MESA_DATA_COMANDA_SUBTOTAL_MODIFICADO_BY_INDEX", {
-                           subtotal_modificado: curr_comanda_price.subtotal_modificado,
-                           key: vue_this.title,
-                           index: vue_this.index,
-                           comanda_index: index
-                        });
+                        if(vue_this.type === "table") {
+                           vue_this.$store.commit("SET_MESA_DATA_COMANDA_SUBTOTAL_MODIFICADO_BY_INDEX", {
+                              subtotal_modificado: curr_comanda_price.subtotal_modificado,
+                              key: vue_this.title,
+                              index: vue_this.index,
+                              comanda_index: index
+                           });
+                        }
                      } else {
                         vue_this.$fire({
                            title: "Error",
@@ -629,11 +635,13 @@ export default {
                   vue_this.$emit("removeOrderComanda", vue_this.auth_modal.curr_index);
                   vue_this.comanda_price.splice(vue_this.auth_modal.curr_index, 1);
 
-                  vue_this.$store.commit("SET_MESA_DATA_REMOVE_COMANDA_BY_INDEX", {
-                     key: vue_this.title,
-                     index: vue_this.index,
-                     comanda_index: vue_this.auth_modal.curr_index
-                  });
+                  if(vue_this.type === "table") {
+                     vue_this.$store.commit("SET_MESA_DATA_REMOVE_COMANDA_BY_INDEX", {
+                        key: vue_this.title,
+                        index: vue_this.index,
+                        comanda_index: vue_this.auth_modal.curr_index
+                     });
+                  }
 
                   vue_this.hideAuthModal();
                   vue_this.auth_modal.curr_index = -1;
@@ -1019,11 +1027,13 @@ export default {
             new_data["comanda"].splice(0, (new_data["comanda"].length - this.order_add_products_modal.product_selected.length));
             ///////////////////////////////////////
 
-            this.$store.commit("SET_MESA_DATA_BY_INDEX", {
-               ...data,
-               key: this.title,
-               index: this.index
-            });
+            if(this.type === "table") {
+               this.$store.commit("SET_MESA_DATA_BY_INDEX", {
+                  ...data,
+                  key: this.title,
+                  index: this.index
+               });
+            }
 
             this.printProductsData(new_data);
             this.$emit("updateOrder", data);

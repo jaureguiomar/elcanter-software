@@ -196,8 +196,8 @@
                            v-if="table.selected <= 0 && !data.new_order"
                         />
                         <FormContainerElem
-                           @addOrder="addOrder"
                            v-if="table.selected <= 0 && data.new_order"
+                           @addOrder="addOrder"
                         />
                         <TotalContainerElem
                            v-if="table.selected > 0 && !data.new_order"
@@ -345,6 +345,7 @@ export default {
    },
    computed: {
       ...mapGetters([
+         "getCorteLast",
          "getIsOnline"
       ])
    },
