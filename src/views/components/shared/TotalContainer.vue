@@ -501,14 +501,14 @@ export default {
                      });
                      vue_this.comanda_price[index].subtotal = new_subtotal;
                   } else {
-                     this.$fire({
+                     vue_this.$fire({
                         title: "Error",
                         text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
                         type: "error"
                      });
                   }
                } else {
-                  this.$fire({
+                  vue_this.$fire({
                      title: "Error",
                      text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
                      type: "error"
@@ -553,14 +553,14 @@ export default {
                            value: curr_comanda_price.subtotal_modificado
                         });
                      } else {
-                        this.$fire({
+                        vue_this.$fire({
                            title: "Error",
                            text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
                            type: "error"
                         });
                      }
                   } else {
-                     this.$fire({
+                     vue_this.$fire({
                         title: "Error",
                         text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
                         type: "error"
@@ -616,14 +616,14 @@ export default {
                   vue_this.hideAuthModal();
                   vue_this.auth_modal.curr_index = -1;
                } else {
-                  this.$fire({
+                  vue_this.$fire({
                      title: "Error",
                      text: "Usuario y/o contrase;a incorrecto",
                      type: "error"
                   });
                }
             } else {
-               this.$fire({
+               vue_this.$fire({
                   title: "Error",
                   text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
                   type: "error"
@@ -758,14 +758,14 @@ export default {
                   // vue_this.closed = true;
                   vue_this.hideCloseOrderModal();
                } else {
-                  this.$fire({
+                  vue_this.$fire({
                      title: "Error",
                      text: "Usuario y/o contrase;a incorrecto",
                      type: "error"
                   });
                }
             } else {
-               this.$fire({
+               vue_this.$fire({
                   title: "Error",
                   text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
                   type: "error"
@@ -812,7 +812,7 @@ export default {
                vue_this.order_add_products_modal.product = data;
                vue_this.$refs["order-add-products-modal"].show();
             } else {
-               this.$fire({
+               vue_this.$fire({
                   title: "Error",
                   text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
                   type: "error"
@@ -1084,14 +1084,14 @@ export default {
                         value: "Cerrado Modif"
                      });
                   } else {
-                     this.$fire({
+                     vue_this.$fire({
                         title: "Error",
                         text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
                         type: "error"
                      });
                   }
                } else {
-                  this.$fire({
+                  vue_this.$fire({
                      title: "Error",
                      text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
                      type: "error"
