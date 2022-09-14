@@ -8,7 +8,12 @@
                   <LeftContentElem>
                      <template #title>
                         <div class="content-title-left">
-                           <h4>Lista de mesas</h4>
+                           <h4>
+                              Lista de mesas
+                              <a href="#_" @click="onRefreshTables">
+                                 <font-awesome-icon icon="fa-solid fa-arrows-rotate" />
+                              </a>
+                           </h4>
                         </div>
                      </template>
 
@@ -359,9 +364,27 @@ export default {
             return {};
          }
       },
+      onRefreshTables() {
+         this.retrieveAllMesasData();
+      },
       ///////////////
       // Functions //
       async retrieveAllMesasData() {
+         this.data.table.selected.id = -1;
+         this.data.table.selected.status = -1;
+         this.data.table.selected.no_table = -1;
+         this.data.table.selected.title = null;
+         this.data.table.selected.index = -1;
+         this.data.table.selected.curr_sale = {};
+
+         this.$store.commit("SET_MESA_BARRA", []);
+         this.$store.commit("SET_MESA_COCINA", []);
+         this.$store.commit("SET_MESA_CUARTITO", []);
+         this.$store.commit("SET_MESA_PATIO1", []);
+         this.$store.commit("SET_MESA_PATIO2", []);
+         this.$store.commit("SET_MESA_PRESIDENCIAL", []);
+         this.$store.commit("SET_MESA_REDONDA", []);
+
          let barra_data = [];
          for(let i = 0; i < this.data.table.id_table.barra.length; i++) {
             const curr_id = this.data.table.id_table.barra[i];
@@ -410,6 +433,12 @@ export default {
             redonda_data.push(await this.retrieveMesaData(curr_id));
          }
          this.$store.commit("SET_MESA_REDONDA", redonda_data);
+
+         this.$fire({
+            title: "Ok",
+            text: "Informacion de las mesas actualizados correctamente",
+            type: "success"
+         });
       },
       findFieldById(id) {
          let finded = {

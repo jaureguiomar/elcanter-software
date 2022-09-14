@@ -51,30 +51,6 @@ const store = new Vuex.Store({
       SET_MESA_BARRA: (state, data) => {
          state.mesa.barra = data;
       },
-      SET_MESA_BARRA_BY_INDEX: (state, data) => {
-         state.mesa.barra[data.index] = {
-            cambio: data.cambio,
-            comanda: data.comanda,
-            corte_id: data.corte_id,
-            cuanto_pago: data.cuanto_pago,
-            fecha_final: data.fecha_final,
-            hora_final: data.hora_final,
-            hora_inicio: data.hora_inicio,
-            idmesa: data.idmesa,
-            idmesero: data.idmesero,
-            idventa: data.idventa,
-            is_sync: data.is_sync,
-            mesa: data.mesa,
-            mesero: data.mesero,
-            metodo_pago: data.metodo_pago,
-            monto_propina: data.monto_propina,
-            personas: data.personas,
-            porcentaje_propina: data.porcentaje_propina,
-            propina: data.propina,
-            status: data.status,
-            total: data.total
-         };
-      },
       // SET_MESA_BARRA_DATA: (state, data) => {
       //    state.mesa.barra[data.index] = {
       //       cambio: data.cambio,
@@ -102,9 +78,9 @@ const store = new Vuex.Store({
       // SET_MESA_BARRA_STATUS: (state, data) => {
       //    state.mesa.barra[data.index].status = data;
       // },
-      SET_MESA_BARRA_COMANDA: (state, data) => {
-         state.mesa.barra[data.index].comanda = data.comanda;
-      },
+      // SET_MESA_BARRA_COMANDA: (state, data) => {
+      //    state.mesa.barra[data.index].comanda = data.comanda;
+      // },
       SET_MESA_COCINA: (state, data) => {
          state.mesa.cocina = data;
       },
@@ -122,6 +98,30 @@ const store = new Vuex.Store({
       },
       SET_MESA_REDONDA: (state, data) => {
          state.mesa.redonda = data;
+      },
+      SET_MESA_DATA_BY_INDEX: (state, data) => {
+         state.mesa[data.key][data.index] = {
+            cambio: data.cambio,
+            comanda: data.comanda,
+            corte_id: data.corte_id,
+            cuanto_pago: data.cuanto_pago,
+            fecha_final: data.fecha_final,
+            hora_final: data.hora_final,
+            hora_inicio: data.hora_inicio,
+            idmesa: data.idmesa,
+            idmesero: data.idmesero,
+            idventa: data.idventa,
+            is_sync: data.is_sync,
+            mesa: data.mesa,
+            mesero: data.mesero,
+            metodo_pago: data.metodo_pago,
+            monto_propina: data.monto_propina,
+            personas: data.personas,
+            porcentaje_propina: data.porcentaje_propina,
+            propina: data.propina,
+            status: data.status,
+            total: data.total
+         };
       },
       SET_CORTE_LAST: (state, data) => {
          state.corte.last = data;

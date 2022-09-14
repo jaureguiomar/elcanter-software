@@ -5,7 +5,8 @@ import {
    faUtensils, faPlus,
    faRectangleList, faCircleChevronRight,
    faCheck, faDownload, faEraser, faDatabase,
-   faXmark, faCircleXmark, faStore, faStoreSlash
+   faXmark, faCircleXmark, faStore, faStoreSlash,
+   faArrowsRotate
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
@@ -23,4 +24,5 @@ library.add(faXmark);
 library.add(faCircleXmark);
 library.add(faStore);
 library.add(faStoreSlash);
+library.add(faArrowsRotate);
 Vue.component('font-awesome-icon', FontAwesomeIcon);

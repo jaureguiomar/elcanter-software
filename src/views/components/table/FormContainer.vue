@@ -191,7 +191,49 @@ export default {
             return;
          }
 
-         this.$store.commit("SET_MESA_BARRA_BY_INDEX", sale_data);
+         if(this.title === "Cocina")
+            this.$store.commit("SET_MESA_DATA_BY_INDEX", {
+               ...sale_data,
+               key: "cocina",
+               index: this.index
+            });
+         else if(this.title === "Barra")
+            this.$store.commit("SET_MESA_DATA_BY_INDEX", {
+               ...sale_data,
+               key: "barra",
+               index: this.index
+            });
+         else if(this.title === "Patio")
+            this.$store.commit("SET_MESA_DATA_BY_INDEX", {
+               ...sale_data,
+               key: "patio",
+               index: this.index
+            });
+         else if(this.title === "")
+            this.$store.commit("SET_MESA_DATA_BY_INDEX", {
+               ...sale_data,
+               key: "patio2",
+               index: this.index
+            });
+         else if(this.title === "Presidencial")
+            this.$store.commit("SET_MESA_DATA_BY_INDEX", {
+               ...sale_data,
+               key: "presidencial",
+               index: this.index
+            });
+         else if(this.title === "Redonda")
+            this.$store.commit("SET_MESA_DATA_BY_INDEX", {
+               ...sale_data,
+               key: "redonda",
+               index: this.index
+            });
+         else if(this.title === "Cuartito")
+            this.$store.commit("SET_MESA_DATA_BY_INDEX", {
+               ...sale_data,
+               key: "cuartito",
+               index: this.index
+            });
+
          this.$emit("updateTableStatus", 2);
          this.$emit("updateCurrSale", sale_data);
      }
