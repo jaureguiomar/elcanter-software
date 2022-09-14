@@ -87,7 +87,9 @@ export default {
       async onTableContainerClick() {
          let new_id = -1;
          let new_status = -1;
-         let no_table = -1;
+         let new_no_table = -1;
+         let new_title = null;
+         let new_index = -1;
 
          if(!this.getCorteLast) {
             this.$fire({
@@ -111,7 +113,9 @@ export default {
          if(this.idTable != this.currIdSelected) {
             new_id = this.idTable;
             new_status = this.statusTable;
-            no_table = this.noTable;
+            new_no_table = this.noTable;
+            new_title = this.title;
+            new_index = this.index;
 
             if(this.title === "Cocina")
                data = this.getMesaCocina[this.index];
@@ -133,7 +137,9 @@ export default {
          this.$emit("updateCurrSelectedItem", {
             id: new_id,
             status: new_status,
-            no_table: no_table
+            no_table: new_no_table,
+            title: new_title,
+            index: new_index
          });
       }
    }

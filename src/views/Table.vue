@@ -135,8 +135,10 @@
                               data.table.selected.id != -1 &&
                               data.table.selected.status == 1
                            "
-                           :noTable="data.table.selected.no_table"
                            :idTable="data.table.selected.id"
+                           :noTable="data.table.selected.no_table"
+                           :title="data.table.selected.title"
+                           :index="data.table.selected.index"
                            @updateTableStatus="updateTableStatus"
                            @updateCurrSale="updateCurrSale"
                         />
@@ -198,6 +200,8 @@ export default {
                   id: -1,
                   status: -1,
                   no_table: -1,
+                  title: null,
+                  index: -1,
                   curr_sale: {}
                },
                id_table: {
@@ -300,6 +304,8 @@ export default {
          this.data.table.selected.id = newTableData.id;
          this.data.table.selected.status = newTableData.status;
          this.data.table.selected.no_table = newTableData.no_table;
+         this.data.table.selected.title = newTableData.title;
+         this.data.table.selected.index = newTableData.index;
       },
       updateTableStatus(newStatus) {
          let finded = this.findFieldById(this.data.table.selected.id);

@@ -36,7 +36,7 @@
                   </div>
                </div>
                <div class="form-grup row">
-                  <button @click="onAbrirMesaClick" type="submit" class="btn btn-custom-orange col-md-12">
+                  <button type="submit" class="btn btn-custom-orange col-md-12" @click="onAbrirMesaClick">
                      <font-awesome-icon icon="fa-solid fa-circle-chevron-right" />
                      Abrir mesa
                   </button>
@@ -56,11 +56,21 @@ export default {
    props: {
       idTable: {
          type: Number,
-         required: false
+         required: false,
+         default: -1
       },
       noTable: {
          type: Number,
-         required: false
+         required: false,
+         default: -1
+      },
+      title: {
+         type: String,
+         required: true
+      },
+      index: {
+         type: Number,
+         required: true
       }
    },
    data() {
@@ -71,6 +81,7 @@ export default {
    },
    computed: {
       ...mapGetters([
+         "getCorteLast",
          "getIsOnline"
       ])
    },
@@ -97,49 +108,32 @@ export default {
             return;
          }
 
+         //////////////////////////////
+         // Validate if "corte" open //
+         // Get last valid "corte"
+         if(!this.getCorteLast) {
+            this.$fire({
+               title: "Error",
+               text: "No hay corte iniciado.",
+               type: "error"
+            });
+            return;
+         }
+
          let http = null;
          if(this.getIsOnline)
             http = Vue.prototype.$http;
          else
             http = Vue.prototype.$httpLocal;
 
-         //////////////////////////////
-         // Validate if "corte" open //
-         // Get last valid "corte"
-         let response = null;
-         let last_corte_id = null;
-         response = await http.post("Cortes/get_last", {},
-            {
-               responseType: "text",
-               headers: {
-                  "X-Requested-With": "XMLHttpRequest",
-                  "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
-               }
-            }
-         );
-         if(response) {
-            const data = response.data;
-            last_corte_id = data["id"];
-         } else {
-            this.$fire({
-               title: "Error",
-               text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
-               type: "error"
-            });
-            return;
-         }
-         //////////////////////////////
-         //////////////////////////////
-
          // Insert sale
          let id_sale = -1;
-         response = null;
-         response = await http.post("Ventas/insert", querystring.stringify({
+         let response = await http.post("Ventas/insert", querystring.stringify({
             status: 1,
             idmesa: this.idTable,
             idmesero: this.idmesero,
             personas: this.personas,
-            corte_id: last_corte_id
+            corte_id: this.getCorteLast["id"]
          }),
          {
             responseType: "text",
@@ -199,6 +193,7 @@ export default {
             return;
          }
 
+         this.$store.commit("SET_MESA_BARRA_BY_INDEX", sale_data);
          this.$emit("updateTableStatus", 2);
          this.$emit("updateCurrSale", sale_data);
      }
