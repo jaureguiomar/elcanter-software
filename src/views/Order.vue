@@ -345,7 +345,6 @@ export default {
    },
    computed: {
       ...mapGetters([
-         "getCorteLast",
          "getIsOnline"
       ])
    },
@@ -374,22 +373,55 @@ export default {
    },
    methods: {
       async onNewOrderClick() {
-         // Get last valid "corte"
-         if(!this.getCorteLast) {
+         let http = null;
+         if(this.getIsOnline)
+            http = Vue.prototype.$http;
+         else
+            http = Vue.prototype.$httpLocal;
+
+         ////////////////////////////
+         // Get last valid "corte" //
+         let response = null;
+         let last_corte = null;
+         response = await http.post("Cortes/get_last", {},
+            {
+               responseType: "text",
+               headers: {
+                  "X-Requested-With": "XMLHttpRequest",
+                  "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+               }
+            }
+         );
+         if(response) {
+            const data = response.data;
+            last_corte = data;
+            if(!last_corte) {
+               this.$fire({
+                  title: "Error",
+                  text: "Debes iniciar corte antes de realizar pedidos",
+                  type: "error"
+               });
+               return;
+            } else {
+               if(last_corte["status"] == 2) {
+                  this.$fire({
+                     title: "Error",
+                     text: "Debes iniciar corte antes de realizar pedidos",
+                     type: "error"
+                  });
+                  return;
+               }
+            }
+         } else {
             this.$fire({
                title: "Error",
-               text: "Debes iniciar corte antes de realizar pedidos",
-               type: "error"
-            });
-            return;
-         } else if(this.getCorteLast["status"] == 2) {
-            this.$fire({
-               title: "Error",
-               text: "Debes iniciar corte antes de realizar pedidos",
+               text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
                type: "error"
             });
             return;
          }
+         ////////////////////////////
+         ////////////////////////////
 
          this.data.new_order = true;
          this.table.selected = -1;

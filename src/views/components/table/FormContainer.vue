@@ -81,7 +81,6 @@ export default {
    },
    computed: {
       ...mapGetters([
-         "getCorteLast",
          "getIsOnline"
       ])
    },
@@ -108,30 +107,56 @@ export default {
             return;
          }
 
-         // Get last valid "corte"
-         if(!this.getCorteLast) {
-            this.$fire({
-               title: "Error",
-               text: "No hay corte iniciado.",
-               type: "error"
-            });
-            return;
-         }
-
          let http = null;
          if(this.getIsOnline)
             http = Vue.prototype.$http;
          else
             http = Vue.prototype.$httpLocal;
 
+         ////////////////////////////
+         // Get last valid "corte" //
+         let response = null;
+         let last_corte_id = null;
+         response = await http.post("Cortes/get_last", {},
+            {
+               responseType: "text",
+               headers: {
+                  "X-Requested-With": "XMLHttpRequest",
+                  "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+               }
+            }
+         );
+         if(response) {
+            const data = response.data;
+            if(!data) {
+               this.$fire({
+                  title: "Error",
+                  text: "No hay corte iniciado.",
+                  type: "error"
+               });
+               return;
+            } else {
+               last_corte_id = data["id"];
+            }
+         } else {
+            this.$fire({
+               title: "Error",
+               text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+               type: "error"
+            });
+            return;
+         }
+         ////////////////////////////
+         ////////////////////////////
+
          // Insert sale
          let id_sale = -1;
-         let response = await http.post("Ventas/insert", querystring.stringify({
+         response = await http.post("Ventas/insert", querystring.stringify({
             status: 1,
             idmesa: this.idTable,
             idmesero: this.idmesero,
             personas: this.personas,
-            corte_id: this.getCorteLast["id"]
+            corte_id: last_corte_id
          }),
          {
             responseType: "text",

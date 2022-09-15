@@ -280,7 +280,6 @@ export default {
    },
    computed: {
       ...mapGetters([
-         "getCorteLast",
          "getIsOnline"
       ])
    },
@@ -359,8 +358,8 @@ export default {
                }
             )
             if(response) {
-               const data = response.data;
-               this.$store.commit("SET_CORTE_LAST", data);
+               // const data = response.data;
+               // this.$store.commit("SET_CORTE_LAST", data);
             } else {
                this.$fire({
                   title: "Error",
@@ -378,23 +377,56 @@ export default {
             });
          }
       },
-      onOpenCashRegister() {
+      async onOpenCashRegister() {
          this.data.open_register.start_money = "0.00";
          this.data.open_register.waiter_id = "";
 
-         if(!this.getCorteLast) {
-            this.$refs["open-cash-register-modal"].show();
-         } else {
-            if(this.getCorteLast["status"] == 1) {
-               this.$fire({
-                  title: "Error",
-                  text: "Ya existe un corte abierto!",
-                  type: "error"
-               });
-            } else {
-               this.$refs["open-cash-register-modal"].show();
+         let http = null;
+         if(this.getIsOnline)
+            http = Vue.prototype.$http;
+         else
+            http = Vue.prototype.$httpLocal;
+
+         ////////////////////////////
+         // Get last valid "corte" //
+         let response = null;
+         let last_corte = null;
+         response = await http.post("Cortes/get_last", {},
+            {
+               responseType: "text",
+               headers: {
+                  "X-Requested-With": "XMLHttpRequest",
+                  "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+               }
             }
+         );
+         if(response) {
+            const data = response.data;
+            console.log("data", data);
+            last_corte = data;
+            if(!last_corte) {
+               this.$refs["open-cash-register-modal"].show();
+            } else {
+               if(last_corte["status"] == 1) {
+                  this.$fire({
+                     title: "Error",
+                     text: "Ya existe un corte abierto!",
+                     type: "error"
+                  });
+               } else {
+                  this.$refs["open-cash-register-modal"].show();
+               }
+            }
+         } else {
+            this.$fire({
+               title: "Error",
+               text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+               type: "error"
+            });
+            return;
          }
+         ////////////////////////////
+         ////////////////////////////
       },
       hideCloseCashRegister() {
          this.$refs["close-cash-register-modal"].hide();
@@ -426,24 +458,56 @@ export default {
             return;
          }
 
-         if(!this.getCorteLast) {
+         let http = null;
+         if(this.getIsOnline)
+            http = Vue.prototype.$http;
+         else
+            http = Vue.prototype.$httpLocal;
+
+         ////////////////////////////
+         // Get last valid "corte" //
+         let response = null;
+         let last_corte = null;
+         response = await http.post("Cortes/get_last", {},
+            {
+               responseType: "text",
+               headers: {
+                  "X-Requested-With": "XMLHttpRequest",
+                  "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+               }
+            }
+         );
+         if(response) {
+            const data = response.data;
+            last_corte = data;
+            if(!last_corte) {
+               this.$fire({
+                  title: "Error",
+                  text: "No hay cort abierto.",
+                  type: "error"
+               });
+               return;
+            } else {
+               if(last_corte["status"] == 2) {
+                  this.$fire({
+                     title: "Error",
+                     text: "No hay corte abierto",
+                     type: "error"
+                  });
+               }
+            }
+         } else {
             this.$fire({
                title: "Error",
                text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
                type: "error"
             });
             return;
-         } else {
-            if(this.getCorteLast["status"] == 2) {
-               this.$fire({
-                  title: "Error",
-                  text: "No hay corte abierto",
-                  type: "error"
-               });
-            }
          }
+         ////////////////////////////
+         ////////////////////////////
 
-         if(this.getCorteLast) {
+         if(last_corte) {
             this.$store.commit("SET_CORTE_CLOSE", {
                status: 2,
                waiter_close: this.data.close_register.waiter_id,
@@ -453,16 +517,10 @@ export default {
                amount_end: this.data.close_register.sale_today
             });
 
-            let http = null;
-            if(this.getIsOnline)
-               http = Vue.prototype.$http;
-            else
-               http = Vue.prototype.$httpLocal;
-
             // Get update "corte"
             let response = null;
-            response = await http.post("Cortes/update/" + this.getCorteLast["id"], querystring.stringify({
-               corte: JSON.stringify(this.getCorteLast)
+            response = await http.post("Cortes/update/" + last_corte["id"], querystring.stringify({
+               corte: JSON.stringify(last_corte)
             }),
                {
                   responseType: "text",
@@ -500,35 +558,61 @@ export default {
          }
       },
       async onCloseCashRegister() {
-         if(this.getCorteLast) {
-            if(this.getCorteLast["status"] == 2) {
-               this.$fire({
-                  title: "Error",
-                  text: "No hay corte abierto",
-                  type: "error"
-               });
-               return;
-            }
-         } else {
-            this.$fire({
-               title: "Error",
-               text: "No hay corte abierto",
-               type: "error"
-            });
-            return;
-         }
-
-         //////////////////////////////
-         // Get ALL sales by "corte" //
          let http = null;
          if(this.getIsOnline)
             http = Vue.prototype.$http;
          else
             http = Vue.prototype.$httpLocal;
 
+         ////////////////////////////
+         // Get last valid "corte" //
          let response = null;
+         let last_corte = null;
+         response = await http.post("Cortes/get_last", {},
+            {
+               responseType: "text",
+               headers: {
+                  "X-Requested-With": "XMLHttpRequest",
+                  "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+               }
+            }
+         );
+         if(response) {
+            const data = response.data;
+            last_corte = data;
+            if(!last_corte) {
+               this.$fire({
+                  title: "Error",
+                  text: "No hay cort abierto.",
+                  type: "error"
+               });
+               return;
+            } else {
+               if(last_corte["status"] == 2) {
+                  this.$fire({
+                     title: "Error",
+                     text: "No hay corte abierto",
+                     type: "error"
+                  });
+                  return;
+               }
+            }
+         } else {
+            this.$fire({
+               title: "Error",
+               text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+               type: "error"
+            });
+            return;
+         }
+         ////////////////////////////
+         ////////////////////////////
+
+         //////////////////////////////
+         // Get ALL sales by "corte" //
+         response = null;
          let sales_by_corte = null;
-         response = await http.post("Ventas/get_sales_by_corte/" + this.getCorteLast["id"], {},
+         response = await http.post("Ventas/get_sales_by_corte/" + last_corte["id"], {},
             {
                responseType: "text",
                headers: {
@@ -553,7 +637,7 @@ export default {
          // Get ALL orders by "corte" //
          response = null;
          let orders_by_corte = null;
-         response = await http.post("Pedidos/get_orders_by_corte/" + this.getCorteLast["id"], {},
+         response = await http.post("Pedidos/get_orders_by_corte/" + last_corte["id"], {},
             {
                responseType: "text",
                headers: {
@@ -614,8 +698,8 @@ export default {
             this.data.close_register.sale_today = total;
             this.data.close_register.sale_sale = total_sale;
             this.data.close_register.sale_order = total_order;
-            this.data.close_register.total_register = (parseFloat(total) + parseFloat(this.getCorteLast["amount_start"])).toFixed(2);
-            this.data.open_register.start_money = this.getCorteLast["amount_start"];
+            this.data.close_register.total_register = (parseFloat(total) + parseFloat(last_corte["amount_start"])).toFixed(2);
+            this.data.open_register.start_money = last_corte["amount_start"];
             this.data.close_register.printer_ticket = false;
             this.$refs["close-cash-register-modal"].show();
          } else {

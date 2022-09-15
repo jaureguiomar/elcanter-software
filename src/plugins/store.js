@@ -47,9 +47,9 @@ const store = new Vuex.Store({
       getMesaRedonda(state) {
          return state.mesa.redonda;
       },
-      getCorteLast(state) {
-         return state.corte.last;
-      },
+      // getCorteLast(state) {
+      //    return state.corte.last;
+      // },
       getIsOnline(state) {
          return state.is_online;
       }
@@ -145,9 +145,9 @@ const store = new Vuex.Store({
       SET_MESA_BAKUP: (state, data) => {
          state.mesa.bakup = data;
       },
-      SET_CORTE_LAST: (state, data) => {
-         state.corte.last = data;
-      },
+      // SET_CORTE_LAST: (state, data) => {
+      //    state.corte.last = data;
+      // },
       SET_CORTE_CLOSE: (state, data) => {
          state.corte.last = {
             amount_end: data.amount_end,

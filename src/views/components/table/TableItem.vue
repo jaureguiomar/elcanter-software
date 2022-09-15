@@ -34,7 +34,9 @@
 </template>
 
 <script>
+import Vue from "vue";
 import { mapGetters } from "vuex";
+
 export default {
    props: {
       idTable: {
@@ -79,7 +81,6 @@ export default {
          "getMesaPatio2",
          "getMesaPresidencial",
          "getMesaRedonda",
-         "getCorteLast",
          "getIsOnline"
       ])
    },
@@ -91,23 +92,55 @@ export default {
          let new_title = null;
          let new_index = -1;
 
-         if(!this.getCorteLast) {
-            this.$fire({
-               title: "Error",
-               text: "Debes iniciar corte antes de realizar ventas",
-               type: "error"
-            });
-            return;
-         } else {
-            if(this.getCorteLast["status"] == 2) {
+         let http = null;
+         if(this.getIsOnline)
+            http = Vue.prototype.$http;
+         else
+            http = Vue.prototype.$httpLocal;
+
+         ////////////////////////////
+         // Get last valid "corte" //
+         let response = null;
+         let last_corte = null;
+         response = await http.post("Cortes/get_last", {},
+            {
+               responseType: "text",
+               headers: {
+                  "X-Requested-With": "XMLHttpRequest",
+                  "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+               }
+            }
+         );
+         if(response) {
+            const data = response.data;
+            last_corte = data;
+            if(!last_corte) {
                this.$fire({
                   title: "Error",
-                  text: "Debes iniciar corte antes de realizar ventas",
+                  text: "Debes iniciar corte antes de realizar pedidos",
                   type: "error"
                });
                return;
+            } else {
+               if(last_corte["status"] == 2) {
+                  this.$fire({
+                     title: "Error",
+                     text: "Debes iniciar corte antes de realizar pedidos",
+                     type: "error"
+                  });
+                  return;
+               }
             }
+         } else {
+            this.$fire({
+               title: "Error",
+               text: "Ha ocurrido un error inesperado. Por favor, intenta de nuevo.",
+               type: "error"
+            });
+            return;
          }
+         ////////////////////////////
+         ////////////////////////////
 
          let data = {};
          if(this.idTable != this.currIdSelected) {
