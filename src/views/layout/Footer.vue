@@ -3,7 +3,7 @@
       <div class="footer-container-margin">
          <div class="footer-container-content">
             <h4>
-               Elcanterero Restaurante 2022 v0.3.2
+               Elcanterero Restaurante 2022 v0.3.3
                <span :style="[getIsOnline ? { color: 'green' } : { color: 'red' }]" style="margin-left: 10px;">({{ (getIsOnline) ? "Online" : "Offline" }})</span>
                <!-- <button :disabled="!getIsOnline" style="margin-left: 10px;" class="btn btn-sm btn-primary" @click="onRefreshItems">Actualizar registros offline</button> -->
             </h4>

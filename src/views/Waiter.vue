@@ -517,6 +517,13 @@ export default {
             //    amount_end: this.data.close_register.sale_today
             // });
 
+            last_corte["status"] = 2;
+            last_corte["waiter_close"] = this.data.close_register.waiter_id;
+            last_corte["date_close"] = new Date();
+            last_corte["amount_sale"] = this.data.close_register.sale_sale;
+            last_corte["amount_order"] = this.data.close_register.sale_order;
+            last_corte["amount_end"] = this.data.close_register.sale_today;
+
             // Get update "corte"
             let response = null;
             response = await http.post("Cortes/update/" + last_corte["id"], querystring.stringify({
@@ -532,6 +539,7 @@ export default {
             );
             if(response) {
                const data = response.data;
+               console.log("data", data);
                if(data == 1) {
                   this.$refs["close-cash-register-modal"].hide();
                   this.$fire({
