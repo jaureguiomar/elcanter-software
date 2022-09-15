@@ -73,7 +73,7 @@ async function createWindow() {
     win.loadURL("app://./index.html")
   }
 
-  process.env.GH_TOKEN = "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";
+  process.env.GH_TOKEN = "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";
   log.info("Checking for updates...");
   autoUpdater.autoDownload = true;
   autoUpdater.checkForUpdates();
