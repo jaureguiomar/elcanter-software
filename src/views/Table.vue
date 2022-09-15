@@ -271,10 +271,22 @@ export default {
    },
    async created() {
       this.retrieveAllMesasData();
-      if(!this.getMesaBakup) {
-         this.retrieveAllSalesData();
-         this.$store.commit("SET_MESA_BAKUP", true);
-      }
+      // if(!this.getMesaBakup) {
+      //    this.retrieveAllSalesData();
+      //    this.$store.commit("SET_MESA_BAKUP", true);
+      // }
+
+      const vue_this = this;
+      window.api.receive("initialize-tables-data-reply", (data) => {
+         vue_this.$store.commit("SET_MESA_BARRA", data.barra);
+         vue_this.$store.commit("SET_MESA_COCINA", data.cocina);
+         vue_this.$store.commit("SET_MESA_CUARTITO", data.cuartito);
+         vue_this.$store.commit("SET_MESA_PATIO1", data.patio1);
+         vue_this.$store.commit("SET_MESA_PATIO2", data.patio2);
+         vue_this.$store.commit("SET_MESA_PRESIDENCIAL", data.presidencial);
+         vue_this.$store.commit("SET_MESA_REDONDA", data.redonda);
+         vue_this.$store.commit("SET_MESA_BAKUP", true);
+      });
    },
    methods: {
       updateCurrSelected(newTableData) {

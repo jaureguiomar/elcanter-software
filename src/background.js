@@ -8,6 +8,7 @@ import {
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 import mysql from "mysql";
+import { retrieveTablesData } from "./functions/tables-data";
 
 const { autoUpdater } = require("electron-updater");
 const log = require("electron-log");
@@ -15,6 +16,9 @@ const path = require("path");
 const isDevelopment = process.env.NODE_ENV !== "production";
 const escpos = require("escpos");
 escpos.USB = require("escpos-usb");
+
+// const base_path = "http://127.0.0.1/elcanter";
+const base_path = "https://elcantererorestaurante.com";
 const mysql_connection = {
   host: "localhost",
   user: "root",
@@ -42,6 +46,7 @@ async function createWindow() {
     icon_path = path.join(rootDir, "resources/img/elcanter-icon.ico");
 
   // Create the browser window.
+  let tables_data = await retrieveTablesData(base_path);
   win = new BrowserWindow({
     width: 1024,
     height: 768,
@@ -72,6 +77,10 @@ async function createWindow() {
     // Load the index.html when not in development
     win.loadURL("app://./index.html")
   }
+
+  // win.webContents.once("did-finish-load", function () {
+  win.webContents.send("initialize-tables-data-reply", tables_data);
+  // });
 
   process.env.GH_TOKEN = "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";
   log.info("Checking for updates...");

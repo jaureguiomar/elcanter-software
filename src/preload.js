@@ -13,6 +13,7 @@ contextBridge.exposeInMainWorld(
     },
     receive: (channel, func) => {
       let validChannels = [
+        "initialize-tables-data-reply",
         "mysql-data-bakup-reply"
       ];
       if(validChannels.includes(channel))
