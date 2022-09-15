@@ -63,6 +63,10 @@ async function createWindow() {
   win.removeMenu();
   win.maximize();
 
+  win.webContents.on("did-finish-load", function () {
+    win.webContents.send("initialize-tables-data-reply", tables_data);
+  });
+
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
@@ -77,10 +81,6 @@ async function createWindow() {
     // Load the index.html when not in development
     win.loadURL("app://./index.html")
   }
-
-  // win.webContents.once("did-finish-load", function () {
-  win.webContents.send("initialize-tables-data-reply", tables_data);
-  // });
 
   process.env.GH_TOKEN = "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";
   log.info("Checking for updates...");
