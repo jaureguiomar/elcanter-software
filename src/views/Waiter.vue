@@ -508,14 +508,14 @@ export default {
          ////////////////////////////
 
          if(last_corte) {
-            this.$store.commit("SET_CORTE_CLOSE", {
-               status: 2,
-               waiter_close: this.data.close_register.waiter_id,
-               date_close: new Date(),
-               amount_sale: this.data.close_register.sale_sale,
-               amount_order: this.data.close_register.sale_order,
-               amount_end: this.data.close_register.sale_today
-            });
+            // this.$store.commit("SET_CORTE_CLOSE", {
+            //    status: 2,
+            //    waiter_close: this.data.close_register.waiter_id,
+            //    date_close: new Date(),
+            //    amount_sale: this.data.close_register.sale_sale,
+            //    amount_order: this.data.close_register.sale_order,
+            //    amount_end: this.data.close_register.sale_today
+            // });
 
             // Get update "corte"
             let response = null;
@@ -580,6 +580,7 @@ export default {
          if(response) {
             const data = response.data;
             last_corte = data;
+            console.log("last_corte", last_corte);
             if(!last_corte) {
                this.$fire({
                   title: "Error",
