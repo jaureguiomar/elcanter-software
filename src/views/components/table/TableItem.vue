@@ -91,6 +91,7 @@ export default {
          let new_no_table = -1;
          let new_title = null;
          let new_index = -1;
+         let new_name_table = null;
 
          let http = null;
          if(this.getIsOnline)
@@ -144,6 +145,7 @@ export default {
 
          let data = {};
          if(this.idTable != this.currIdSelected) {
+            let finded = false;
             new_id = this.idTable;
             new_status = this.statusTable;
             new_no_table = this.noTable;
@@ -152,25 +154,35 @@ export default {
             if(this.title === "Cocina") {
                data = this.getMesaCocina[this.index];
                new_title = "cocina";
+               finded = true;
             } else if(this.title === "Barra") {
                data = this.getMesaBarra[this.index];
                new_title = "barra";
+               finded = true;
             } else if(this.title === "Patio") {
                data = this.getMesaPatio1[this.index];
                new_title = "patio1";
+               finded = true;
             } else if(this.title === "") {
                data = this.getMesaPatio2[this.index];
                new_title = "patio2";
+               finded = true;
             } else if(this.title === "Presidencial") {
                data = this.getMesaPresidencial[this.index];
                new_title = "presidencial";
+               finded = true;
             } else if(this.title === "Redonda") {
                data = this.getMesaRedonda[this.index];
                new_title = "redonda";
+               finded = true;
             } else if(this.title === "Cuartito") {
                data = this.getMesaCuartito[this.index];
                new_title = "cuartito";
+               finded = true;
             }
+
+            if(finded && "mesa" in data)
+               new_name_table = data.mesa.croquis;
          }
 
          this.$emit("updateCurrSaleItem", data);
@@ -179,7 +191,8 @@ export default {
             status: new_status,
             no_table: new_no_table,
             title: new_title,
-            index: new_index
+            index: new_index,
+            name_table: new_name_table
          });
       }
    }

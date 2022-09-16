@@ -161,6 +161,7 @@
                            type="table"
                            :title="data.table.selected.title"
                            :index="data.table.selected.index"
+                           :nameTable="data.table.selected.name_table"
                            @updateOrder="updateOrder"
                            @updateOrderComandaField="updateOrderComandaField"
                            @removeOrderComanda="removeOrderComanda"
@@ -214,6 +215,7 @@ export default {
                   no_table: -1,
                   title: null,
                   index: -1,
+                  name_table: null,
                   curr_sale: {}
                },
                id_table: {
@@ -295,6 +297,7 @@ export default {
          this.data.table.selected.no_table = newTableData.no_table;
          this.data.table.selected.title = newTableData.title;
          this.data.table.selected.index = newTableData.index;
+         this.data.table.selected.name_table = newTableData.name_table;
       },
       updateTableStatus(newStatus) {
          let finded = this.findFieldById(this.data.table.selected.id);

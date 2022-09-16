@@ -12,13 +12,14 @@
                      {{ (type == "table") ? "Mesa" : "Pedido" }}
                      no.
                      {{ (type == "table") ? data.mesa.nomesa : data.idpedido }}
+                     {{ (type == "table") ? " - " + nameTable : "" }}
                   </div>
                </div>
                <div class="right-content">
                   <button
-                     @click="showOrderAddProducsModal"
                      :disabled="closed"
                      class="btn btn-custom"
+                     @click="showOrderAddProducsModal"
                   >
                      <a href="#">
                         <font-awesome-icon icon="fa-solid fa-plus" />
@@ -421,6 +422,11 @@ export default {
          type: Number,
          required: false,
          default: -1
+      },
+      nameTable: {
+         type: String,
+         required: false,
+         default: null
       }
    },
    data() {
