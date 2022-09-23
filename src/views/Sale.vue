@@ -100,6 +100,7 @@
                                           </b-row>
 
                                           <b-table
+                                             ref="selectableTable"
                                              :items="data.sale"
                                              :fields="table.fields"
                                              :current-page="table.currentPage"
@@ -114,10 +115,11 @@
                                              empty-text="No hay registros disponibles para mostrar"
                                              empty-filtered-text="No hay registros disponibles para mostrar"
                                              small
-                                             @filtered="onFiltered"
+                                             striped
+                                             hover
                                              selectable
-                                             ref="selectableTable"
                                              :select-mode="'single'"
+                                             @filtered="onFiltered"
                                              @row-selected="onSaleRowClick"
                                           >
                                              <template #cell(name)="row">
